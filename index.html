@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>西班牙语小短文学习 - 40篇精读笔记</title>
+<style>
+  :root {
+    --bg: #fdf6f0; --card-bg: #ffffff; --text: #2c2416; --text-secondary: #6b5e4a;
+    --accent: #c75b39; --accent-light: #fce8e0; --border: #e8d5c4;
+    --annotation-bg: #fef9f4; --annotation-border: #f0dcc8;
+    --sidebar-bg: #2c2416; --sidebar-text: #d4c5b0; --sidebar-active: #c75b39;
+    --shadow: 0 2px 12px rgba(44,36,22,0.06);
+    --radius: 12px; --radius-sm: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', system-ui, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.7; display: flex; min-height: 100vh;
+  }
+  .sidebar {
+    width: 280px; min-width: 280px; background: var(--sidebar-bg); color: var(--sidebar-text);
+    position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100;
+    display: flex; flex-direction: column;
+    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  .sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; background: var(--sidebar-bg); z-index: 2; }
+  .sidebar-header h2 { font-size: 1.15rem; font-weight: 700; color: #fff; }
+  .sidebar-header .subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .sidebar-search { padding: 12px 16px; position: sticky; top: 90px; background: var(--sidebar-bg); z-index: 2; }
+  .sidebar-search input { width: 100%; padding: 9px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: #fff; font-size: 0.85rem; outline: none; }
+  .sidebar-search input:focus { border-color: var(--sidebar-active); }
+  .sidebar-search input::placeholder { color: rgba(255,255,255,0.3); }
+  .sidebar-nav { flex: 1; padding: 8px 0; }
+  .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--sidebar-text); text-decoration: none; font-size: 0.88rem; border-left: 3px solid transparent; transition: all 0.15s; }
+  .sidebar-nav a:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .sidebar-nav a.active { background: rgba(199,91,57,0.15); color: #fff; border-left-color: var(--sidebar-active); font-weight: 600; }
+  .sidebar-nav a .num { font-size: 0.72rem; color: rgba(255,255,255,0.35); min-width: 24px; text-align: right; }
+  .sidebar-nav a.active .num { color: var(--sidebar-active); }
+  .main { margin-left: 280px; flex: 1; padding: 32px 40px 60px; max-width: 1000px; width: 100%; }
+  .main-header { text-align: center; margin-bottom: 32px; padding: 28px 0 20px; border-bottom: 2px solid var(--border); }
+  .main-header h1 { font-size: 1.9rem; font-weight: 800; color: var(--text); }
+  .main-header p { color: var(--text-secondary); font-size: 0.92rem; margin-top: 6px; }
+  .toolbar { display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+  .toolbar button { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border); background: #fff; color: var(--text-secondary); cursor: pointer; font-size: 0.84rem; font-family: inherit; transition: all 0.15s; }
+  .toolbar button:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .toolbar button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .toolbar button.primary:hover { opacity: 0.9; }
+  .essay-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 32px; overflow: hidden; scroll-margin-top: 24px; }
+  .essay-card-header { padding: 22px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; }
+  .essay-card-header .essay-num { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+  .essay-card-header .essay-title-group { flex: 1; }
+  .essay-card-header .essay-title-es { font-size: 1.15rem; font-weight: 700; }
+  .essay-card-header .essay-title-cn { font-size: 0.84rem; color: var(--text-secondary); margin-top: 2px; }
+  .essay-card-header .toggle-icon { font-size: 1.2rem; color: var(--text-secondary); transition: transform 0.25s; }
+  .essay-card.collapsed .essay-card-header .toggle-icon { transform: rotate(-90deg); }
+  .essay-card.collapsed .essay-card-body { display: none; }
+  .sentence-block { padding: 14px 28px; border-bottom: 1px solid #f5efe8; transition: background 0.15s; }
+  .sentence-block:hover { background: #fefcf9; }
+  .sentence-es { font-size: 1.06rem; font-weight: 500; display: flex; align-items: flex-start; gap: 8px; cursor: pointer; user-select: none; }
+  .sentence-es .sentence-num { font-size: 0.7rem; color: #c9b99a; min-width: 22px; padding-top: 3px; flex-shrink: 0; }
+  .sentence-es .sentence-toggle { font-size: 0.55rem; color: #c9b99a; padding-top: 5px; flex-shrink: 0; transition: transform 0.2s; }
+  .sentence-block.open .sentence-es .sentence-toggle { transform: rotate(90deg); }
+  .sentence-es .sentence-text { flex: 1; }
+  .play-btn { background: none; border: 1.5px solid var(--border); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); font-size: 0.85rem; flex-shrink: 0; opacity: 0; transition: all 0.15s; margin-top: 1px; }
+  .sentence-block:hover .play-btn { opacity: 1; }
+  .play-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+  .play-btn.playing { background: var(--accent); color: #fff; border-color: var(--accent); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  .annotation-area { margin-top: 10px; display: none; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .sentence-block.open .annotation-area { display: grid; }
+  .annotation-slot { background: var(--annotation-bg); border: 1px solid var(--annotation-border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.8rem; color: #5c4a32; transition: border-color 0.15s, background 0.15s; }
+  .annotation-slot:hover { border-color: #d4b896; background: #fffbf6; }
+  .annotation-slot .slot-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+  .annotation-slot .slot-label::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .annotation-slot.grammar .slot-label { color: #c96a45; } .annotation-slot.grammar .slot-label::before { background: #e8946b; }
+  .annotation-slot.pronunciation .slot-label { color: #5a8f72; } .annotation-slot.pronunciation .slot-label::before { background: #7eb8a0; }
+  .annotation-slot.morphology .slot-label { color: #5a7499; } .annotation-slot.morphology .slot-label::before { background: #8ea4c8; }
+  .annotation-slot .slot-content { line-height: 1.55; min-height: 18px; }
+  .annotation-slot .slot-content:empty::after { content: '点击添加笔记...'; color: #c9b99a; font-style: italic; }
+  .annotation-slot[contenteditable="true"] { cursor: text; outline: none; }
+  .annotation-slot[contenteditable="true"]:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(199,91,57,0.08); }
+  .annotation-slot.pre-filled { border-style: solid; border-color: #e8d8c4; background: #fffdf8; }
+  .translation-row { padding: 8px 28px; display: flex; align-items: center; gap: 8px; }
+  .translation-row button { background: none; border: 1px solid var(--border); border-radius: 16px; padding: 5px 14px; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .translation-row button:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+  .translation-row button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chinese-translation { margin: 0 28px 14px; padding: 14px 20px; background: #faf7f2; border-radius: var(--radius-sm); font-size: 0.88rem; color: #5c4a32; border-left: 3px solid var(--border); display: none; }
+  .chinese-translation.visible { display: block; }
+  .knowledge-summary { margin: 18px 28px 22px; background: linear-gradient(135deg,#fef9f4 0%,#fdf4ea 100%); border: 1px solid var(--annotation-border); border-radius: var(--radius); overflow: hidden; }
+  .knowledge-summary-header { padding: 13px 20px; font-weight: 700; font-size: 0.92rem; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+  .knowledge-summary-body { padding: 0 20px 16px; }
+  .ks-section { margin-bottom: 12px; }
+  .ks-section h4 { font-size: 0.8rem; font-weight: 700; color: #8b6f4e; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .ks-section h4 .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .ks-section h4 .dot.vocab { background: #e8946b; } .ks-section h4 .dot.grammar { background: #7eb8a0; }
+  .ks-section h4 .dot.phrase { background: #8ea4c8; } .ks-section h4 .dot.culture { background: #c9a87c; }
+  .ks-item { display: flex; gap: 8px; padding: 3px 0; font-size: 0.82rem; line-height: 1.5; }
+  .ks-item .ks-es { font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .ks-item .ks-zh { color: var(--text-secondary); }
+  .ks-item .vocab-play-btn { background: none; border: 1px solid var(--annotation-border); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.6rem; color: var(--accent); flex-shrink: 0; margin-right: 4px; vertical-align: middle; transition: all 0.15s; padding: 0; }
+  .ks-item .vocab-play-btn:hover { background: var(--accent-light); border-color: var(--accent); }
+  .ks-item .vocab-play-btn.playing { background: var(--accent); color: #fff; border-color: var(--accent); animation: pulse 0.8s infinite; }
+  .full-text-overview { margin: 0 28px 16px; padding: 18px 22px; background: linear-gradient(135deg,#faf7f2 0%,#f8f2e8 100%); border-radius: var(--radius-sm); border-left: 4px solid var(--accent); position: relative; }
+  .full-text-overview .overview-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  .full-text-overview .overview-text { font-size: 1.02rem; line-height: 1.9; color: var(--text); font-weight: 450; }
+  .full-text-overview .overview-translation { font-size: 0.88rem; line-height: 1.8; color: var(--text-secondary); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--annotation-border); }
+  .full-text-overview .play-all-btn { background: var(--accent); color: #fff; border: none; border-radius: 16px; padding: 5px 14px; font-size: 0.75rem; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 5px; transition: opacity 0.15s; }
+  .full-text-overview .play-all-btn:hover { opacity: 0.85; }
+  .full-text-overview .play-all-btn.playing { animation: pulse 0.8s infinite; }
+  .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 2px 12px rgba(199,91,57,0.3); opacity: 0; transform: translateY(10px); transition: all 0.25s; pointer-events: none; z-index: 50; display: flex; align-items: center; justify-content: center; }
+  .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .mobile-menu-btn { display: none; position: fixed; top: 12px; left: 12px; z-index: 200; width: 40px; height: 40px; border-radius: 50%; background: var(--sidebar-bg); color: #fff; border: none; font-size: 1.2rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+  .file-protocol-notice { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #fffbf0; color: #8b6914; padding: 7px 20px; font-size: 0.78rem; text-align: center; border-bottom: 2px solid #f0d78c; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .file-protocol-notice.show { display: block; }
+  .file-protocol-notice code { background: #fdf6e3; padding: 1px 6px; border-radius: 3px; font-size: 0.75rem; }
+  .file-protocol-notice a { color: var(--accent); }
+  @media (max-width: 768px) {
+    .annotation-area { grid-template-columns: 1fr; }
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 20px 16px 40px; }
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay.open { display: block; }
+  }
+  @media print {
+    .sidebar,.back-to-top,.mobile-menu-btn,.sidebar-overlay,.toolbar { display:none!important; }
+    .main { margin-left:0; padding:0; }
+    .essay-card { break-inside:avoid; box-shadow:none; border:1px solid #ddd; }
+    .chinese-translation { display:block!important; }
+    .essay-card.collapsed .essay-card-body { display:block!important; }
+  }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="file-protocol-notice" id="fileProtocolNotice">
+  💡 使用 <code id="serverCmd">python3 -m http.server 8080</code> 启动本地服务器即可启用 Google TTS 自然发音 — 然后访问 <a href="http://localhost:8080/">http://localhost:8080/</a>
+</div>
+<button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header"><h2>&#127466;&#127480; 西班牙语学习</h2><div class="subtitle">40篇短文 &middot; 逐句精析</div></div>
+  <div class="sidebar-search"><input type="text" placeholder="&#128269; 搜索标题..." oninput="filterEssays(this.value)"></div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+</aside>
+<main class="main" id="mainContent">
+  <div class="main-header"><h1>&#128214; 西班牙语小短文学习</h1><p>共40篇 &middot; 逐句精析 &middot; 语法标注 &middot; 发音朗读 &middot; 词性变位</p></div>
+  <div class="toolbar">
+    <button onclick="expandAll()">&#128194; 展开全部</button>
+    <button onclick="collapseAll()">&#128193; 折叠全部</button>
+    <button onclick="toggleAllTranslations()">&#127758; 切换翻译</button>
+    <button onclick="clearUserAnnotations()">&#129529; 清空笔记</button>
+    <button id="ttsEngineBtn" class="primary" onclick="toggleTTSEngine()" title="切换语音引擎">🎙️ Google TTS</button>
+    <button onclick="changeSpeed(-0.05)" title="更慢">🐢</button>
+    <button onclick="changeSpeed(+0.05)" title="更快">🐇</button>
+    <span id="speedLabel" style="font-size:0.78rem;color:var(--text-secondary);display:flex;align-items:center;margin:0 4px">0.70x</span>
+    <button class="primary" onclick="exportForPrint()">&#128424; 打印/导出</button>
+  </div>
+  <div id="essaysContainer"></div>
+</main>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+<script>
+var ESSAYS = [{"num": 1, "title_es": "Mi día", "title_cn": "我的一天", "spanish": "Me despierto a las siete de la mañana. Me cepillo los dientes, me ducho y me visto. Desayuno pan y café. Luego, voy a la universidad en autobús. En la tarde, estudio en la biblioteca. Por la noche, ceno con mi familia y veo la televisión antes de acostarme.", "chinese": "我早上七点起床，刷牙、洗澡、穿衣服，早餐吃面包喝咖啡。然后乘公 交车去大学。下午在图书馆学习。晚上和家人一起吃晚餐，睡觉前看电视。", "sentences": ["Me despierto a las siete de la mañana.", "Me cepillo los dientes, me ducho y me visto.", "Desayuno pan y café.", "Luego, voy a la universidad en autobús.", "En la tarde, estudio en la biblioteca.", "Por la noche, ceno con mi familia y veo la televisión antes de acostarme."]}, {"num": 2, "title_es": "El parque", "title_cn": "公园", "spanish": "El parque es un lugar bonito. Hay árboles, flores y un estanque. Las personas caminan, corren o juegan con sus perros. Los niños se divierten en el área de juegos. Me gusta sentarme en un banco y leer un libro mientras escucho los pájaros cantar.", "chinese": "公园是个美丽的地方，有树木、花朵和池塘。人们散步、跑步或和狗狗 玩耍，孩子们在游乐区嬉戏。我喜欢坐在长椅上看书，听鸟儿唱歌。", "sentences": ["El parque es un lugar bonito.", "Hay árboles, flores y un estanque.", "Las personas caminan, corren o juegan con sus perros.", "Los niños se divierten en el área de juegos.", "Me gusta sentarme en un banco y leer un libro mientras escucho los pájaros cantar."]}, {"num": 3, "title_es": "Mi comida favorita", "title_cn": "我最喜欢的食物", "spanish": "Mi comida favorita es la pizza. Me encanta el queso derretido y los ingredientes variados, como pepperoni, pimientos y champiñones. Cuando voy a un restaurante italiano, siempre pido una pizza. Es deliciosa y me hace muy feliz.", "chinese": "我最喜欢的食物是披萨，我喜欢融化的奶酪和各种配料，比如意大利辣 香肠、甜椒和蘑菇。去意大利餐厅时，我总会点一份披萨，它很美味，让我很 开心。", "sentences": ["Mi comida favorita es la pizza.", "Me encanta el queso derretido y los ingredientes variados, como pepperoni, pimientos y champiñones.", "Cuando voy a un restaurante italiano, siempre pido una pizza.", "Es deliciosa y me hace muy feliz."]}, {"num": 4, "title_es": "Mi mejor amigo", "title_cn": "我最好的朋友", "spanish": "Mi mejor amigo se llama Juan. Es muy simpático y divertido. Nos gusta jugar al fútbol y ver películas juntos. Él siempre me ayuda cuando tengo problemas. Estoy muy afortunado de tener un amigo como él.", "chinese": "我最好的朋友叫胡安，他非常友善有趣。我们喜欢一起踢足球、看电影， 我遇到困难时他总会帮我。有这样的朋友，我很幸运。", "sentences": ["Mi mejor amigo se llama Juan.", "Es muy simpático y divertido.", "Nos gusta jugar al fútbol y ver películas juntos.", "Él siempre me ayuda cuando tengo problemas.", "Estoy muy afortunado de tener un amigo como él."]}, {"num": 5, "title_es": "El viaje a la playa", "title_cn": "海滩之旅", "spanish": "El verano pasado, fui a la playa con mi familia. El mar era azul y el sol brillaba. Jugué con la arena, nadé en el mar y tomé el sol. Comimos helado y disfrutamos de la vista. Fue un día maravilloso que nunca olvidaré.", "chinese": "去年夏天，我和家人去了海滩。大海湛蓝，阳光明媚。我玩沙子、在海 里游泳、晒太阳，还吃了冰淇淋，欣赏美景。那是我永远难忘的美好一天。", "sentences": ["El verano pasado, fui a la playa con mi familia.", "El mar era azul y el sol brillaba.", "Jugué con la arena, nadé en el mar y tomé el sol.", "Comimos helado y disfrutamos de la vista.", "Fue un día maravilloso que nunca olvidaré."]}, {"num": 6, "title_es": "Mi mascota", "title_cn": "我的宠物", "spanish": "Tengo un gato llamado Mimi. Es muy bonito, con pelo blanco y ojos verdes. Mimi me sigue por toda la casa y me acurruca en mis piernas. Me encanta jugar con él y darle munchis. Es como un miembro más de mi familia.", "chinese": "我有一只猫叫咪咪，它很漂亮，白毛绿眼。咪咪总是跟着我在家里转， 还会蜷缩在我腿上。我喜欢和它玩耍、喂它零食，它就像我家的一员。", "sentences": ["Tengo un gato llamado Mimi.", "Es muy bonito, con pelo blanco y ojos verdes.", "Mimi me sigue por toda la casa y me acurruca en mis piernas.", "Me encanta jugar con él y darle munchis.", "Es como un miembro más de mi familia."]}, {"num": 7, "title_es": "La mañana", "title_cn": "早晨", "spanish": "La mañana es mi momento favorito del día. El aire es fresco y el sol empieza a brillar. Me gusta tomar un café caliente y ver el amanecer. Es un buen comienzo para un día productivo.", "chinese": "早晨是我一天中最喜欢的时刻，空气清新，阳光初现。我喜欢喝一杯热 咖啡，看日出，这是开启高效一天的好方式。", "sentences": ["La mañana es mi momento favorito del día.", "El aire es fresco y el sol empieza a brillar.", "Me gusta tomar un café caliente y ver el amanecer.", "Es un buen comienzo para un día productivo."]}, {"num": 8, "title_es": "Mi casa", "title_cn": "我的家", "spanish": "Vivo en una casa pequeña pero acogedora. Tiene dos habitaciones, una cocina y un salón. En el salón, hay una televisión y un sofá muy cómodo. Me gusta pasar tiempo en mi habitación leyendo o escuchando música.", "chinese": "我住在一个小而温馨的房子里，有两个房间、一个厨房和一个客厅。客 厅里有电视和一张很舒服的沙发，我喜欢在房间里看书或听音乐。", "sentences": ["Vivo en una casa pequeña pero acogedora.", "Tiene dos habitaciones, una cocina y un salón.", "En el salón, hay una televisión y un sofá muy cómodo.", "Me gusta pasar tiempo en mi habitación leyendo o escuchando música."]}, {"num": 9, "title_es": "El idioma español", "title_cn": "西班牙语", "spanish": "Aprender español es muy divertido. Las palabras son bonitas y la gramática es interesante. Me gusta hablar español con mis amigos y ver películas en español. Quiero viajar a España y practicar el idioma.", "chinese": "学习西班牙语很有趣，词汇优美，语法也很有意思。我喜欢和朋友用西 班牙语交流，看西班牙语电影。我想去西班牙旅行，练习这门语言。", "sentences": ["Aprender español es muy divertido.", "Las palabras son bonitas y la gramática es interesante.", "Me gusta hablar español con mis amigos y ver películas en español.", "Quiero viajar a España y practicar el idioma."]}, {"num": 10, "title_es": "El otoño", "title_cn": "秋天", "spanish": "El otoño es una estación preciosa. Los árboles cambian de color, y las hojas marrones caen al suelo. Hace un calorcito y se puede sentir el aroma de las manzanas y las calabazas. Es el mejor momento para tomar té caliente.", "chinese": "秋天是个美丽的季节，树叶变色，棕色的叶子飘落。天气微暖，可以闻 到苹果和南瓜的香气，这是喝热茶的最佳时节。", "sentences": ["El otoño es una estación preciosa.", "Los árboles cambian de color, y las hojas marrones caen al suelo.", "Hace un calorcito y se puede sentir el aroma de las manzanas y las calabazas.", "Es el mejor momento para tomar té caliente."]}, {"num": 11, "title_es": "Mi hobby", "title_cn": "我的爱好", "spanish": "Mi hobby es pintar. Me gusta sentarme en mi estudio y crear dibujos con acuarelas o óleos. Pinto paisajes, retratos y objetos cotidianos. Pintar me ayuda a relajarme y expresar mis sentimientos.", "chinese": "我的爱好是画画，我喜欢坐在工作室里，用水彩或油画创作。我画风景、 肖像和日常物品，画画能让我放松，表达情感。", "sentences": ["Mi hobby es pintar.", "Me gusta sentarme en mi estudio y crear dibujos con acuarelas o óleos.", "Pinto paisajes, retratos y objetos cotidianos.", "Pintar me ayuda a relajarme y expresar mis sentimientos."]}, {"num": 12, "title_es": "La fiesta", "title_cn": "派对", "spanish": "Celebré mi cumpleaños con una gran fiesta. Mis amigos vinieron a mi casa con regalos y pastel. Bailamos, comimos y charlamos toda la noche. Fue una fiesta inolvidable y me sentí muy querido.", "chinese": "我举办了一场盛大的生日派对，朋友们带着礼物和蛋糕来我家。我们整 晚跳舞、吃东西、聊天，这是一场难忘的派对，我感到很幸福。", "sentences": ["Celebré mi cumpleaños con una gran fiesta.", "Mis amigos vinieron a mi casa con regalos y pastel.", "Bailamos, comimos y charlamos toda la noche.", "Fue una fiesta inolvidable y me sentí muy querido."]}, {"num": 13, "title_es": "El libro", "title_cn": "书", "spanish": "Me encanta leer libros. En particular, amo las novelas de ciencia ficción y misterio. Un buen libro me transporta a otros mundos y me hace pensar en cosas nuevas. Leo antes de dormir todos los días.", "chinese": "我喜欢读书，尤其热爱科幻和悬疑小说。一本好书能带我进入新世界， 让我思考新事物，我每天睡前都会看书。", "sentences": ["Me encanta leer libros.", "En particular, amo las novelas de ciencia ficción y misterio.", "Un buen libro me transporta a otros mundos y me hace pensar en cosas nuevas.", "Leo antes de dormir todos los días."]}, {"num": 14, "title_es": "El gimnasio", "title_cn": "健身房", "spanish": "Voy al gimnasio tres veces a la semana. Hago ejercicio en las máquinas, corro en la cinta y hago yoga. Me siento más saludable y energética después de entrenar. Es una forma buena de cuidarme.", "chinese": "我每周去三次健身房，在器械上锻炼、在跑步机上跑步、做瑜伽。锻炼 后我感觉更健康、精力充沛，这是照顾自己的好方式。", "sentences": ["Voy al gimnasio tres veces a la semana.", "Hago ejercicio en las máquinas, corro en la cinta y hago yoga.", "Me siento más saludable y energética después de entrenar.", "Es una forma buena de cuidarme."]}, {"num": 15, "title_es": "Mi ciudad", "title_cn": "我的城市", "spanish": "Vivo en una ciudad muy animada. Hay muchos parques, museos y tiendas. En el centro, hay una plaza grande donde las personas se reúnen. Me gusta pasear por las calles y probar la comida local.", "chinese": "我住在一座热闹的城市，有许多公园、博物馆和商店。市中心有一个大 广场，人们常在那里聚会。我喜欢在街上漫步，品尝当地美食。", "sentences": ["Vivo en una ciudad muy animada.", "Hay muchos parques, museos y tiendas.", "En el centro, hay una plaza grande donde las personas se reúnen.", "Me gusta pasear por las calles y probar la comida local."]}, {"num": 16, "title_es": "El tren", "title_cn": "火车", "spanish": "A veces viajo en tren. Es una forma cómoda y relajante de viajar. Puedo ver los paisajes bonitos desde la ventana y trabajar o leer durante el viaje. Además, es más ecológico que viajar en coche.", "chinese": "我有时乘火车旅行，这是一种舒适放松的出行方式。我可以从车窗欣赏 美景，旅途中还能工作或看书，而且比开车更环保。", "sentences": ["A veces viajo en tren.", "Es una forma cómoda y relajante de viajar.", "Puedo ver los paisajes bonitos desde la ventana y trabajar o leer durante el viaje.", "Además, es más ecológico que viajar en coche."]}, {"num": 17, "title_es": "El cumpleaños de mi abuela", "title_cn": "奶奶的生日", "spanish": "Celebramos el cumpleaños de mi abuela. Preparamos un gran banquete con su comida favorita. Le dimos flores y cartas. Ella estaba muy feliz y nos contó historias de cuando era joven. Fue un día lleno de amor.", "chinese": "我们庆祝奶奶的生日，准备了一桌她爱吃的大餐，送给她鲜花和贺卡。 她很开心，还给我们讲年轻时的故事，这是充满爱的一天。", "sentences": ["Celebramos el cumpleaños de mi abuela.", "Preparamos un gran banquete con su comida favorita.", "Le dimos flores y cartas.", "Ella estaba muy feliz y nos contó historias de cuando era joven.", "Fue un día lleno de amor."]}, {"num": 18, "title_es": "El día de campo", "title_cn": "郊游日", "spanish": "El fin de semana fuimos al campo con amigos. Picamos en un prado, jugamos a voleibol y exploramos los bosques. Era tranquilo y hermoso. Nos divertimos mucho y nos relajamos al aire libre.", "chinese": "周末我们和朋友去郊游，在草地上野餐、打排球、探索森林。那里宁静 又美丽，我们玩得很开心，在户外放松身心。", "sentences": ["El fin de semana fuimos al campo con amigos.", "Picamos en un prado, jugamos a voleibol y exploramos los bosques.", "Era tranquilo y hermoso.", "Nos divertimos mucho y nos relajamos al aire libre."]}, {"num": 19, "title_es": "Mi ropa favorita", "title_cn": "我最喜欢的衣服", "spanish": "Mi ropa favorita es un suéter azul. Es muy suave y cómodo. Lo llevo en invierno con jeans y botas. Siempre me siento bien cuando me pongo este suéter.", "chinese": "我最喜欢的衣服是一件蓝色毛衣，它柔软舒适。冬天我搭配牛仔裤和靴 子穿，穿上这件毛衣我总是感觉很好。", "sentences": ["Mi ropa favorita es un suéter azul.", "Es muy suave y cómodo.", "Lo llevo en invierno con jeans y botas.", "Siempre me siento bien cuando me pongo este suéter."]}, {"num": 20, "title_es": "El perro de mi vecino", "title_cn": "邻居的狗", "spanish": "Mi vecino tiene un perro llamado Max. Es muy amistoso y me saluda con moviendo la cola cuando veo. A veces juego con él en la calle. Max es el mejor vecino que puedo tener.", "chinese": "我邻居有一只狗叫马克斯，它非常友好，看到我就摇着尾巴打招呼，有 时我在街上和它一起玩，马克斯是我最好的 “邻居”。", "sentences": ["Mi vecino tiene un perro llamado Max.", "Es muy amistoso y me saluda con moviendo la cola cuando veo.", "A veces juego con él en la calle.", "Max es el mejor vecino que puedo tener."]}, {"num": 21, "title_es": "La película", "title_cn": "电影", "spanish": "Ayer vi una película de terror en el cine. Era muy emocionante y me dio miedo. Pero también era muy entretenida. Me gusta ver películas con mis amigos y discutirla después.", "chinese": "昨天我在电影院看了一部恐怖片，非常刺激，让我害怕，但也很有趣。 我喜欢和朋友一起看电影，之后讨论剧情。", "sentences": ["Ayer vi una película de terror en el cine.", "Era muy emocionante y me dio miedo.", "Pero también era muy entretenida.", "Me gusta ver películas con mis amigos y discutirla después."]}, {"num": 22, "title_es": "El desayuno", "title_cn": "早餐", "spanish": "Un buen desayuno es importante para comenzar el día. Yo siempre como fruta, pan tostado y bebo leche caliente. Me da energía para trabajar y estudiar.", "chinese": "一顿好的早餐对开启一天很重要，我总是吃水果、烤面包，喝热牛奶， 它给我工作和学习的能量。", "sentences": ["Un buen desayuno es importante para comenzar el día.", "Yo siempre como fruta, pan tostado y bebo leche caliente.", "Me da energía para trabajar y estudiar."]}, {"num": 23, "title_es": "El trabajo", "title_cn": "工作", "spanish": "Trabajo en una tienda de libros. Me encanta porque puedo leer los libros nuevos y recomendarles a los clientes. Es un trabajo relajante y me gusta ayudar a otras personas a encontrar libros interesantes.", "chinese": "我在一家书店工作，我很喜欢这份工作，因为可以阅读新书并推荐给顾 客。这是一份轻松的工作，我喜欢帮助别人找到有趣的书。", "sentences": ["Trabajo en una tienda de libros.", "Me encanta porque puedo leer los libros nuevos y recomendarles a los clientes.", "Es un trabajo relajante y me gusta ayudar a otras personas a encontrar libros interesantes."]}, {"num": 24, "title_es": "El invierno", "title_cn": "冬天", "spanish": "En invierno, hace frío y a veces nieve. Me gusta ponerme ropa cálida, beber chocolate caliente y ver la nieve caer desde la ventana. Aunque hace frío, es una estación muy bonita.", "chinese": "冬天很冷，有时会下雪。我喜欢穿上暖和的衣服，喝热巧克力，从窗户 看雪花飘落。虽然寒冷，但这是个很美的季节。", "sentences": ["En invierno, hace frío y a veces nieve.", "Me gusta ponerme ropa cálida, beber chocolate caliente y ver la nieve caer desde la ventana.", "Aunque hace frío, es una estación muy bonita."]}, {"num": 25, "title_es": "El cumpleaños de mi amigo", "title_cn": "朋友的生日", "spanish": "Fuimos a la fiesta de cumpleaños de mi amigo. Le dimos un regalo sorpresa y cantamos “feliz cumpleaños”. Comimos pastel y jugamos juegos de mesa. Fue una noche muy divertida.", "chinese": "我们去参加朋友的生日派对，送给他一份惊喜礼物，唱了生日歌。我们 吃蛋糕、玩桌游，这是一个非常有趣的夜晚。", "sentences": ["Fuimos a la fiesta de cumpleaños de mi amigo.", "Le dimos un regalo sorpresa y cantamos “feliz cumpleaños”.", "Comimos pastel y jugamos juegos de mesa.", "Fue una noche muy divertida."]}, {"num": 26, "title_es": "El paseo en bicicleta", "title_cn": "骑自行车兜风", "spanish": "Los domingos, salgo a pasear en bicicleta. Me gusta rodar por los caminos del campo y ver la naturaleza. Es una forma saludable de hacer ejercicio y disfrutar del día.", "chinese": "周日我会骑自行车兜风，喜欢沿着乡间小路骑行，欣赏自然风光。这是 一种健康的锻炼方式，也能享受美好时光。", "sentences": ["Los domingos, salgo a pasear en bicicleta.", "Me gusta rodar por los caminos del campo y ver la naturaleza.", "Es una forma saludable de hacer ejercicio y disfrutar del día."]}, {"num": 27, "title_es": "Mi clase favorita", "title_cn": "我最喜欢的课", "spanish": "Mi clase favorita es la de arte. En clase, aprendemos a dibujar y a pintar. El profesor es muy amable y nos enseña muchos trucos. Me gusta expresarme a través del arte.", "chinese": "我最喜欢的课是美术课，在课上我们学习绘画，老师很和蔼，教给我们 很多技巧。我喜欢通过艺术表达自己。", "sentences": ["Mi clase favorita es la de arte.", "En clase, aprendemos a dibujar y a pintar.", "El profesor es muy amable y nos enseña muchos trucos.", "Me gusta expresarme a través del arte."]}, {"num": 28, "title_es": "El cielo nocturno", "title_cn": "夜空", "spanish": "Por las noches, me gusta mirar el cielo. Hay muchas estrellas y a veces puedo ver la luna llena. Es tan bonito y me hace sentir pequeña en este mundo.", "chinese": "晚上我喜欢仰望天空，有许多星星，有时能看到满月。夜空很美，让我 在这个世界中感到自己的渺小。", "sentences": ["Por las noches, me gusta mirar el cielo.", "Hay muchas estrellas y a veces puedo ver la luna llena.", "Es tan bonito y me hace sentir pequeña en este mundo."]}, {"num": 29, "title_es": "El cumpleaños de mi hermano", "title_cn": "弟弟的生日", "spanish": "Celebramos el cumpleaños de mi hermano pequeño. Compramos un pastel con figuras de superhéroes. Él abrió sus regalos y estaba muy emocionado. Fue un día feliz para toda la familia.", "chinese": "我们庆祝弟弟的生日，买了一个有超级英雄图案的蛋糕。他打开礼物， 非常兴奋，这是全家人开心的一天。", "sentences": ["Celebramos el cumpleaños de mi hermano pequeño.", "Compramos un pastel con figuras de superhéroes.", "Él abrió sus regalos y estaba muy emocionado.", "Fue un día feliz para toda la familia."]}, {"num": 30, "title_es": "El parque de atracciones", "title_cn": "游乐园", "spanish": "El verano pasado, fui al parque de atracciones con mis primos. Subimos a montañas rusa, torres de la muerte y cascos de terror. Teníamos miedo, pero también nos reíamos mucho. Fue un día inolvidable.", "chinese": "去年夏天，我和表兄弟们去了游乐园。我们坐了过山车、跳楼机和恐怖 鬼屋，虽然害怕，但也笑得很开心，这是难忘的一天。", "sentences": ["El verano pasado, fui al parque de atracciones con mis primos.", "Subimos a montañas rusa, torres de la muerte y cascos de terror.", "Teníamos miedo, pero también nos reíamos mucho.", "Fue un día inolvidable."]}, {"num": 31, "title_es": "La Navidad en mi familia", "title_cn": "我家的圣诞节", "spanish": "En Navidad, mi familia se reúne en casa. Decoramos el árbol de Navidad con luces y adornos. Mi abuela cocina un delicioso pollo asado y pastel de nieve. Los niños abren los regalos y cantamos villancicos. Es el momento más feliz del año.", "chinese": "圣诞节时，全家人在家团聚。我们用彩灯和饰品装饰圣诞树，奶奶会烤 美味的火鸡，做雪蛋糕。孩子们拆开礼物，一起唱圣诞颂歌，这是一年中最快 乐的时刻。", "sentences": ["En Navidad, mi familia se reúne en casa.", "Decoramos el árbol de Navidad con luces y adornos.", "Mi abuela cocina un delicioso pollo asado y pastel de nieve.", "Los niños abren los regalos y cantamos villancicos.", "Es el momento más feliz del año."]}, {"num": 32, "title_es": "El día de la primavera", "title_cn": "春日时光", "spanish": "Cuando llega la primavera, los árboles florecen y los pájaros cantan. Me gusta pasear por el jardín, ver las tulipanes rojos y amarillos. También hago piquetes con amigos, disfrutando del sol cálido y la brisa suave.", "chinese": "春天到来时，树木开花，鸟儿欢唱。我喜欢在花园漫步，观赏红色和黄 色的郁金香，也会和朋友野餐，享受温暖的阳光与轻柔的微风。", "sentences": ["Cuando llega la primavera, los árboles florecen y los pájaros cantan.", "Me gusta pasear por el jardín, ver las tulipanes rojos y amarillos.", "También hago piquetes con amigos, disfrutando del sol cálido y la brisa suave."]}, {"num": 33, "title_es": "Mi primer día de trabajo", "title_cn": "我的第一个工作日", "spanish": "El primer día en mi nuevo trabajo fue emocionante y nervioso. Conocí a mis compañeros y mi jefe me mostró cómo funcionaba todo. Aunque estaba un poco ansioso, terminé el día sintiéndome orgulloso de haber aprendido mucho.", "chinese": "新工作的第一天既兴奋又紧张。我认识了同事，老板向我介绍工作流程。 虽然有点焦虑，但下班时我很自豪，因为学到了很多东西。", "sentences": ["El primer día en mi nuevo trabajo fue emocionante y nervioso.", "Conocí a mis compañeros y mi jefe me mostró cómo funcionaba todo.", "Aunque estaba un poco ansioso, terminé el día sintiéndome orgulloso de haber aprendido mucho."]}, {"num": 34, "title_es": "El mercado local", "title_cn": "当地集市", "spanish": "Cada sábado, voy al mercado local. Hay puestos con frutas frescas, pan caliente y flores hermosas. Los vendedores son amables y siempre me ofrecen muestra. Me gusta caminar entre las personas y sentir el ambiente animado.", "chinese": "每周六我都会去当地集市，那里有新鲜水果、热乎的面包和漂亮的鲜花 摊位。摊主们很热情，总会让我试吃。我喜欢在人群中穿梭，感受热闹的氛围。", "sentences": ["Cada sábado, voy al mercado local.", "Hay puestos con frutas frescas, pan caliente y flores hermosas.", "Los vendedores son amables y siempre me ofrecen muestra.", "Me gusta caminar entre las personas y sentir el ambiente animado."]}, {"num": 35, "title_es": "Un día en la montaña", "title_cn": "山中一日", "spanish": "El fin de semana fuimos de excursionismo a la montaña. Subimos por senderos, vimos cascadas y lagos cristalinos. Aunque estaba cansado, la vista era impresionante. Tomamos muchas fotos para recordar ese día mágico.", "chinese": "周末我们去山里徒步，沿着小路攀登，看到了瀑布和清澈的湖泊。虽然 很累，但景色令人惊叹。我们拍了许多照片，纪念这神奇的一天。", "sentences": ["El fin de semana fuimos de excursionismo a la montaña.", "Subimos por senderos, vimos cascadas y lagos cristalinos.", "Aunque estaba cansado, la vista era impresionante.", "Tomamos muchas fotos para recordar ese día mágico."]}, {"num": 36, "title_es": "Mi biblioteca favorita", "title_cn": "我最喜欢的图书馆", "spanish": "La biblioteca de mi ciudad es mi lugar favorito. Hay miles de libros, mesas tranquilas y una sección de juegos para niños. Puedo pasar horas leyendo o estudiando aquí. La paz y la iluminación natural me ayudan a concentrarme.", "chinese": "市图书馆是我最喜欢的地方，那里有上万册书籍、安静的书桌和儿童游 戏区。我可以在这里花几个小时阅读或学习，宁静的氛围和自然光线有助于我 集中注意力。", "sentences": ["La biblioteca de mi ciudad es mi lugar favorito.", "Hay miles de libros, mesas tranquilas y una sección de juegos para niños.", "Puedo pasar horas leyendo o estudiando aquí.", "La paz y la iluminación natural me ayudan a concentrarme."]}, {"num": 37, "title_es": "La fiesta de graduación", "title_cn": "毕业典礼", "spanish": "La fiesta de graduación fue inolvidable. Me puse el toga y el mortarboard, y recibí mi diploma. Mis padres estaban muy orgullosos. Después, tuvimos una fiesta con amigos, bailando y celebrando nuestro futuro.", "chinese": "毕业典礼令人难忘。我穿上学位服、戴上学士帽，接过毕业证书，父母 感到非常骄傲。之后，我们和朋友举办派对，跳舞庆祝未来。", "sentences": ["La fiesta de graduación fue inolvidable.", "Me puse el toga y el mortarboard, y recibí mi diploma.", "Mis padres estaban muy orgullosos.", "Después, tuvimos una fiesta con amigos, bailando y celebrando nuestro futuro."]}, {"num": 38, "title_es": "El día de los muertos", "title_cn": "亡灵节", "spanish": "En México, el día de los muertos es una celebración especial. Decoramos altares con flores de cempasúchil, pan de muerto y fotos de nuestros seres queridos fallecidos. Creamos ofrendas para honrarles y recordar sus vidas.", "chinese": "在墨西哥，亡灵节是个特别的节日。我们用万寿菊、亡灵面包和已故亲 人的照片装饰祭坛，准备祭品缅怀他们，纪念他们的一生。", "sentences": ["En México, el día de los muertos es una celebración especial.", "Decoramos altares con flores de cempasúchil, pan de muerto y fotos de nuestros seres queridos fallecidos.", "Creamos ofrendas para honrarles y recordar sus vidas."]}, {"num": 39, "title_es": "Mi primer viaje solo", "title_cn": "我的第一次独自旅行", "spanish": "Este verano, hice mi primer viaje solo a Barcelona. Visité la Sagrada Familia, caminé por la Rambla y probé la paella. Aunque estaba un poco nervioso al principio, aprendí a confiar en mí mismo y me divertí muchísimo.", "chinese": "今年夏天，我第一次独自去巴塞罗那旅行。我参观了圣家堂，漫步兰布 拉大道，品尝了海鲜饭。虽然一开始有点紧张，但我学会了相信自己，玩得非 常开心。", "sentences": ["Este verano, hice mi primer viaje solo a Barcelona.", "Visité la Sagrada Familia, caminé por la Rambla y probé la paella.", "Aunque estaba un poco nervioso al principio, aprendí a confiar en mí mismo y me divertí muchísimo."]}, {"num": 40, "title_es": "El día de la música", "title_cn": "音乐日", "spanish": "Cada año, en el día de la música, la ciudad se llena de conciertos en las calles. Los músicos locales tocan jazz, rock y música tradicional. La gente baila y canta juntos. Es un día lleno de alegría y sonidos hermosos.", "chinese": "每年的音乐日，城市的街道上都会举办音乐会。当地音乐家演奏爵士、 摇滚和传统音乐，人们一起唱歌跳舞，这是充满欢乐与美妙旋律的一天。", "sentences": ["Cada año, en el día de la música, la ciudad se llena de conciertos en las calles.", "Los músicos locales tocan jazz, rock y música tradicional.", "La gente baila y canta juntos.", "Es un día lleno de alegría y sonidos hermosos."]}];
+var KNOWLEDGE = {"1": {"vocabulary": [{"es": "despertarse", "zh": "醒来（反身动词）"}, {"es": "cepillarse los dientes", "zh": "刷牙"}, {"es": "ducharse", "zh": "洗澡"}, {"es": "vestirse", "zh": "穿衣服（e→i）"}, {"es": "desayunar", "zh": "吃早餐"}, {"es": "acostarse", "zh": "上床睡觉（o→ue）"}], "grammar": [{"es": "反身动词", "zh": "me despierto, me ducho — 主语对自己执行动作"}, {"es": "a las + 时间", "zh": "在几点：a las siete"}, {"es": "antes de + inf.", "zh": "在…之前：antes de acostarme"}], "phrases": [{"es": "Por la noche", "zh": "在晚上"}, {"es": "En la tarde", "zh": "在下午"}], "culture": "西班牙晚餐时间21:00-22:00，比许多国家晚得多。"}, "2": {"vocabulary": [{"es": "el parque", "zh": "公园（阳性）"}, {"es": "bonito/a", "zh": "美丽的"}, {"es": "el estanque", "zh": "池塘"}, {"es": "divertirse", "zh": "玩得开心（e→ie）"}, {"es": "mientras", "zh": "当…的时候"}], "grammar": [{"es": "Hay + 名词", "zh": "有…：Hay árboles（无人称）"}, {"es": "gustar", "zh": "Me gusta + inf.（主语是事物）"}], "phrases": [{"es": "Me gusta + inf.", "zh": "我喜欢做…"}], "culture": "西班牙公园是社交生活重要场所。"}, "3": {"vocabulary": [{"es": "la comida favorita", "zh": "最喜欢的食物"}, {"es": "encantar", "zh": "使…非常喜欢"}, {"es": "pedir", "zh": "点菜（e→i）"}], "grammar": [{"es": "encantar", "zh": "Me encanta = 我非常喜欢"}, {"es": "hacer + 情感", "zh": "me hace feliz"}], "phrases": [{"es": "Me encanta...", "zh": "我非常喜欢…"}], "culture": "正宗的西班牙饮食以tapas和paella最为著名。"}, "4": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "5": {"vocabulary": [{"es": "el verano pasado", "zh": "去年夏天"}, {"es": "la playa", "zh": "海滩"}, {"es": "tomar el sol", "zh": "晒太阳"}, {"es": "olvidar", "zh": "忘记"}], "grammar": [{"es": "简单过去时", "zh": "fui, jugué, nadé — 过去已完成动作"}, {"es": "将来时", "zh": "nunca olvidaré"}, {"es": "ser vs estar", "zh": "era azul（性质用ser）"}], "phrases": [{"es": "Fue un día maravilloso.", "zh": "那是美好的一天。"}], "culture": "西班牙有5000+公里海岸线。"}, "6": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "7": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "8": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "9": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "10": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "11": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "12": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "13": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "14": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "15": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "16": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "17": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "18": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "19": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "20": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "21": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "22": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "23": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "24": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "25": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "26": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "27": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "28": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "29": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "30": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "31": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "32": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "33": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "34": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "35": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "36": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "37": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "38": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "39": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}, "40": {"vocabulary": [], "grammar": [], "phrases": [], "culture": ""}};
+var ANNOTATIONS = {"1": {"0": {"grammar": "现在时：despierto — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | 定冠词 las：阴性复数 | a la(s) + 时间：在几点（时间点用a）", "morphology": "las siete：阴性 复数，冠词与名词性数一致 | mañana：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 直接宾语代词 las + siete：代替直接宾语，置于变位动词前"}, "1": {"grammar": "现在时：cepillo, ducho, visto — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数", "morphology": "los dientes：阳性 复数，冠词与名词性数一致 | cepillo：指小词 (diminutivo)，表示\"小\"或亲昵 | 直接宾语代词 los + dientes：代替直接宾语，置于变位动词前"}, "2": {"grammar": "现在时：desayuno — 表示习惯性动作或当前状态", "morphology": ""}, "3": {"grammar": "现在时：luego, voy — 表示习惯性动作或当前状态 | ir a + 动词原形 = 将要做某事（近将来时 periphrasis） | 定冠词 la：阴性单数 | a la(s) + 时间：在几点（时间点用a）", "morphology": "la universidad：阴性 单数，冠词与名词性数一致 | voy ← ir：不规则变位，第一人称单数 现在时 | 直接宾语代词 la + universidad：代替直接宾语，置于变位动词前"}, "4": {"grammar": "现在时：estudio — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | en + 季节/时间段 = 在…期间", "morphology": "la tarde：阴性 单数，冠词与名词性数一致 | biblioteca：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 直接宾语代词 la + tarde：代替直接宾语，置于变位动词前"}, "5": {"grammar": "现在时：ceno, veo — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | por la mañana/tarde/noche = 在上午/下午/晚上（时间段用por） | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi familia）", "morphology": "noche：f性单数（以-e结尾阴性） | televisión：f性单数（以-ón结尾阴性） | veo ← ver：不规则变位，第一人称单数 现在时 | televisión：指大词 (aumentativo)，表示\"大\"或强调"}}, "2": {"0": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "parque：m性单数（以-e结尾阳性） | lugar：m性单数（以-r结尾阳性） | es ← ser：不规则变位，第三人称单数 现在时 | bonito：指小词 (diminutivo)，表示\"小\"或亲昵"}, "1": {"grammar": "hay = there is/are（haber无人称形式，不论单复数都用hay）", "morphology": "estanque：m性单数（以-e结尾阳性）"}, "2": {"grammar": "现在时：juegan — 表示习惯性动作或当前状态 | 定冠词 las：阴性复数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（sus perros）", "morphology": "las personas：阴性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | juegan（原形 jugar）：词根变化 u→ue，第三人称复数 | juegan ← jugar：不规则变位，第三人称复数 现在时"}, "3": {"grammar": "定冠词 el：阳性单数，用于特指或类指 | 定冠词 los：阳性复数", "morphology": "los niños：阳性 复数，冠词与名词性数一致 | el área：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | 复数形式：niños, juegos — 元音结尾加-s，辅音结尾加-es"}, "4": {"grammar": "现在时：banco, libro, escucho — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 los：阳性复数 | mientras = 当…的时候/与此同时（同时性连词）", "morphology": "banco：m性单数（以-o结尾阳性） | libro：m性单数（以-o结尾阳性） | los pájaros：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词"}}, "3": {"0": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi comida）", "morphology": "pizza：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时 | favorita：指小词 (diminutivo)，表示\"小\"或亲昵"}, "1": {"grammar": "现在时：queso, derretido — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 los：阳性复数", "morphology": "queso：m性单数（以-o结尾阳性） | los ingredientes：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | 复数形式：ingredientes, pimientos — 元音结尾加-s，辅音结尾加-es"}, "2": {"grammar": "现在时：voy, italiano, pido — 表示习惯性动作或当前状态 | ir a + 动词原形 = 将要做某事（近将来时 periphrasis） | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "restaurante：m性单数（以-e结尾阳性） | pizza：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | pido（原形 pedir）：词根变化 e→i，第一人称单数"}, "3": {"grammar": "现在时：es, hace — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "es ← ser：不规则变位，第三人称单数 现在时 | hace ← hacer：不规则变位，第三人称单数 现在时"}}, "4": {"0": {"grammar": "现在时：amigo — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi mejor）", "morphology": ""}, "1": {"grammar": "现在时：es, simpático, divertido — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "es ← ser：不规则变位，第三人称单数 现在时 | 过去分词作形容词：divertido — 修饰名词时需性数一致"}, "2": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反", "morphology": "al = a + el（前置词+冠词缩合）"}, "3": {"grammar": "现在时：tengo — 表示习惯性动作或当前状态 | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "形容词与名词性数一致：阳性单数形容词修饰阳性名词 | tengo（原形 tener）：词根变化 e→ie，第一人称单数 | tengo ← tener：不规则变位，第一人称单数 现在时"}, "4": {"grammar": "现在时：estoy, afortunado, amigo — 表示习惯性动作或当前状态 | estar 的用法：表示状态、位置、情感等暂时属性", "morphology": "amigo：m性单数（以-o结尾阳性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | estoy ← estar：不规则变位，第一人称单数 现在时 | 过去分词作形容词：afortunado — 修饰名词时需性数一致"}}, "5": {"0": {"grammar": "现在时：verano, pasado — 表示习惯性动作或当前状态 | 简单过去时 (pretérito indefinido)：fui, fui — 描述已完成的过去动作，常见于叙事 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 la：阴性单数", "morphology": "verano：m性单数（以-o结尾阳性） | playa：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | fui ← ser：不规则变位，第一人称单数 简单过去时"}, "1": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "mar：m性单数（以-r结尾阳性(也可阴性)） | sol：m性单数（以-l结尾阳性） | era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时"}, "2": {"grammar": "定冠词 el：阳性单数，用于特指或类指 | 定冠词 la：阴性单数", "morphology": "arena：f性单数（以-a结尾阴性） | mar：m性单数（以-r结尾阳性(也可阴性)） | sol：m性单数（以-l结尾阳性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "3": {"grammar": "现在时：helado, disfrutamos — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数", "morphology": "vista：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 过去分词作形容词：helado — 修饰名词时需性数一致 | 直接宾语代词 la + vista：代替直接宾语，置于变位动词前"}, "4": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 现在时：maravilloso — 表示习惯性动作或当前状态", "morphology": "día：m性单数（以-a结尾但为阳性例外） | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}}, "6": {"0": {"grammar": "现在时：tengo, gato, llamado — 表示习惯性动作或当前状态", "morphology": "gato：m性单数（以-o结尾阳性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | tengo（原形 tener）：词根变化 e→ie，第一人称单数 | tengo ← tener：不规则变位，第一人称单数 现在时"}, "1": {"grammar": "现在时：es, pelo, blanco — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "形容词与名词性数一致：阳性单数形容词修饰阳性名词 | es ← ser：不规则变位，第三人称单数 现在时 | bonito：指小词 (diminutivo)，表示\"小\"或亲昵"}, "2": {"grammar": "定冠词 la：阴性单数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis piernas）", "morphology": "casa：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 直接宾语代词 la + casa：代替直接宾语，置于变位动词前"}, "3": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反", "morphology": ""}, "4": {"grammar": "现在时：es, miembro — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi familia）", "morphology": "un miembro：阳性 单数，冠词与名词性数一致 | es ← ser：不规则变位，第三人称单数 现在时"}}, "7": {"0": {"grammar": "现在时：es, momento, favorito — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi momento）", "morphology": "mañana：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | del = de + el（前置词+冠词缩合） | es ← ser：不规则变位，第三人称单数 现在时"}, "1": {"grammar": "现在时：es, fresco, empieza — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "el aire：阳性 单数，冠词与名词性数一致 | sol：m性单数（以-l结尾阳性） | empieza（原形 empezar）：词根变化 e→ie，第三人称单数 | es ← ser：不规则变位，第三人称单数 现在时"}, "2": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "un café：阳性 单数，冠词与名词性数一致 | el amanecer：阳性 单数，冠词与名词性数一致"}, "3": {"grammar": "现在时：es, comienzo, productivo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "un buen：阳性 单数，冠词与名词性数一致 | día：m性单数（以-a结尾但为阳性例外） | comienzo（原形 comenzar）：词根变化 e→ie，第一人称单数 | es ← ser：不规则变位，第三人称单数 现在时"}}, "8": {"0": {"grammar": "现在时：vivo — 表示习惯性动作或当前状态", "morphology": "casa：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "1": {"grammar": "现在时：tiene — 表示习惯性动作或当前状态", "morphology": "cocina：f性单数（以-a结尾阴性） | salón：m性单数（以-n结尾阳性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | tiene（原形 tener）：词根变化 e→ie，第三人称单数"}, "2": {"grammar": "现在时：cómodo — 表示习惯性动作或当前状态 | hay = there is/are（haber无人称形式，不论单复数都用hay） | 定冠词 el：阳性单数，用于特指或类指", "morphology": "salón：m性单数（以-n结尾阳性） | televisión：f性单数（以-ón结尾阴性） | sofá：m性单数（以-á结尾阳性） | salón：指大词 (aumentativo)，表示\"大\"或强调"}, "3": {"grammar": "现在时：tiempo, leyendo, escuchando — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi habitación）", "morphology": "habitación：指大词 (aumentativo)，表示\"大\"或强调"}}, "9": {"0": {"grammar": "现在时：es, divertido — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "es ← ser：不规则变位，第三人称单数 现在时 | 过去分词作形容词：divertido — 修饰名词时需性数一致"}, "1": {"grammar": "现在时：son, es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | 定冠词 las：阴性复数", "morphology": "las palabras：阴性 复数，冠词与名词性数一致 | gramática：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | son ← ser：不规则变位，第三人称复数 现在时"}, "2": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis amigos）", "morphology": ""}, "3": {"grammar": "现在时：quiero — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "idioma：m性单数（以-a结尾但为阳性例外） | quiero（原形 querer）：词根变化 e→ie，第一人称单数 | quiero ← querer：不规则变位，第一人称单数 现在时"}}, "10": {"0": {"grammar": "现在时：otoño, es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "otoño：m性单数（以-o结尾阳性） | estación：f性单数（以-ón结尾阴性） | es ← ser：不规则变位，第三人称单数 现在时 | estación：指大词 (aumentativo)，表示\"大\"或强调"}, "1": {"grammar": "现在时：suelo — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数 | 定冠词 las：阴性复数", "morphology": "los árboles：阳性 复数，冠词与名词性数一致 | las hojas：阴性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | al = a + el（前置词+冠词缩合）"}, "2": {"grammar": "现在时：hace, calorcito, puede — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 las：阴性复数", "morphology": "un calorcito：阳性 单数，冠词与名词性数一致 | el aroma：阳性 单数，冠词与名词性数一致 | las manzanas：阴性 复数，冠词与名词性数一致 | las calabazas：阴性 复数，冠词与名词性数一致"}, "3": {"grammar": "现在时：es, momento — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "el mejor：阳性 单数，冠词与名词性数一致 | es ← ser：不规则变位，第三人称单数 现在时"}}, "11": {"0": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi hobby）", "morphology": "es ← ser：不规则变位，第三人称单数 现在时"}, "1": {"grammar": "现在时：estudio — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi estudio）", "morphology": ""}, "2": {"grammar": "现在时：pinto — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词"}, "3": {"grammar": "物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis sentimientos）", "morphology": ""}}, "12": {"0": {"grammar": "物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi cumpleaños）", "morphology": "una gran：阴性 单数，冠词与名词性数一致"}, "1": {"grammar": "物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis amigos）", "morphology": ""}, "2": {"grammar": "现在时：bailamos, charlamos — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数", "morphology": "noche：f性单数（以-e结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 直接宾语代词 la + noche：代替直接宾语，置于变位动词前"}, "3": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 现在时：querido — 表示习惯性动作或当前状态", "morphology": "fiesta：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}}, "13": {"0": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反", "morphology": ""}, "1": {"grammar": "现在时：amo, misterio — 表示习惯性动作或当前状态 | 定冠词 las：阴性复数", "morphology": "las novelas：阴性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | 复数形式：novelas — 元音结尾加-s，辅音结尾加-es | ficción：指大词 (aumentativo)，表示\"大\"或强调"}, "2": {"grammar": "现在时：libro, hace — 表示习惯性动作或当前状态", "morphology": "un buen：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | hace ← hacer：不规则变位，第三人称单数 现在时"}, "3": {"grammar": "现在时：leo — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数", "morphology": "los días：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | 复数形式：antes, todos — 元音结尾加-s，辅音结尾加-es | 直接宾语代词 los + días：代替直接宾语，置于变位动词前"}}, "14": {"0": {"grammar": "现在时：voy, gimnasio — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | a la(s) + 时间：在几点（时间点用a）", "morphology": "la semana：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | al = a + el（前置词+冠词缩合） | voy ← ir：不规则变位，第一人称单数 现在时"}, "1": {"grammar": "现在时：hago, ejercicio, corro — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | 定冠词 las：阴性复数", "morphology": "las máquinas：阴性 复数，冠词与名词性数一致 | cinta：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | hago ← hacer：不规则变位，第一人称单数 现在时"}, "2": {"grammar": "现在时：siento — 表示习惯性动作或当前状态", "morphology": "siento（原形 sentir）：词根变化 e→ie，第一人称单数 | siento ← sentir：不规则变位，第一人称单数 现在时"}, "3": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "una forma：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时"}}, "15": {"0": {"grammar": "现在时：vivo — 表示习惯性动作或当前状态", "morphology": "ciudad：f性单数（以-d结尾阴性）"}, "1": {"grammar": "hay = there is/are（haber无人称形式，不论单复数都用hay）", "morphology": "复数形式：muchos, museos — 元音结尾加-s，辅音结尾加-es"}, "2": {"grammar": "现在时：centro — 表示习惯性动作或当前状态 | hay = there is/are（haber无人称形式，不论单复数都用hay） | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 las：阴性复数", "morphology": "el centro：阳性 单数，冠词与名词性数一致 | plaza：f性单数（以-a结尾阴性） | las personas：阴性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "3": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 la：阴性单数 | 定冠词 las：阴性复数", "morphology": "las calles：阴性 复数，冠词与名词性数一致 | comida：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 复数形式：calles — 元音结尾加-s，辅音结尾加-es"}}, "16": {"0": {"grammar": "现在时：viajo — 表示习惯性动作或当前状态", "morphology": ""}, "1": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "una forma：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时"}, "2": {"grammar": "现在时：puedo — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 la：阴性单数 | 定冠词 los：阳性复数", "morphology": "los paisajes：阳性 复数，冠词与名词性数一致 | la ventana：阴性 单数，冠词与名词性数一致 | viaje：m性单数（以-e结尾阳性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "3": {"grammar": "现在时：es, ecológico — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | más + adj. + que = 比…更（比较级）", "morphology": "es ← ser：不规则变位，第三人称单数 现在时"}}, "17": {"0": {"grammar": "现在时：celebramos — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi abuela）", "morphology": "cumpleaños：m性单数（以-s结尾阳性单数）"}, "1": {"grammar": "现在时：preparamos — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（su comida）", "morphology": "un gran：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | favorita：指小词 (diminutivo)，表示\"小\"或亲昵"}, "2": {"grammar": "简单过去时 (pretérito indefinido)：dimos — 描述已完成的过去动作，常见于叙事", "morphology": "dimos ← dar：不规则变位，第一人称复数 简单过去时 | 间接宾语代词 le + dimos：代替间接宾语（给谁/对谁）"}, "3": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | ser 的用法：表示本质特征、身份、时间等永久属性 | estar 的用法：表示状态、位置、情感等暂时属性 | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "形容词与名词性数一致：阴性单数形容词修饰阴性名词 | era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时"}, "4": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 现在时：lleno — 表示习惯性动作或当前状态", "morphology": "día：m性单数（以-a结尾但为阳性例外） | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}}, "18": {"0": {"grammar": "简单过去时 (pretérito indefinido)：fuimos, fuimos — 描述已完成的过去动作，常见于叙事 | 现在时：campo — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "el fin：阳性 单数，冠词与名词性数一致 | al = a + el（前置词+冠词缩合） | fuimos ← ser：不规则变位，第一人称复数 简单过去时 | fuimos ← ir：不规则变位，第一人称复数 简单过去时"}, "1": {"grammar": "现在时：picamos, prado, jugamos — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数", "morphology": "prado：m性单数（以-o结尾阳性） | los bosques：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | jugamos（原形 jugar）：词根变化 u→ue，第一人称复数"}, "2": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | 现在时：tranquilo, hermoso — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时"}, "3": {"grammar": "现在时：relajamos — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词 | al = a + el（前置词+冠词缩合）"}}, "19": {"0": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi ropa）", "morphology": "suéter：m性单数（以-r结尾阳性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时 | favorita：指小词 (diminutivo)，表示\"小\"或亲昵"}, "1": {"grammar": "现在时：es, cómodo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "es ← ser：不规则变位，第三人称单数 现在时"}, "2": {"grammar": "现在时：llevo, invierno — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阳性单数形容词修饰阳性名词 | 直接宾语代词 lo + llevo：代替直接宾语，置于变位动词前"}, "3": {"grammar": "现在时：siento, pongo — 表示习惯性动作或当前状态 | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "siento（原形 sentir）：词根变化 e→ie，第一人称单数 | siento ← sentir：不规则变位，第一人称单数 现在时 | pongo ← poner：不规则变位，第一人称单数 现在时"}}, "20": {"0": {"grammar": "现在时：vecino, tiene, perro — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi vecino）", "morphology": "perro：m性单数（以-o结尾阳性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | tiene（原形 tener）：词根变化 e→ie，第三人称单数 | tiene ← tener：不规则变位，第三人称单数 现在时"}, "1": {"grammar": "现在时：es, amistoso, moviendo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "cola：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | es ← ser：不规则变位，第三人称单数 现在时 | veo ← ver：不规则变位，第一人称单数 现在时"}, "2": {"grammar": "现在时：juego — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数", "morphology": "calle：f性单数（以-e结尾阴性） | juego（原形 jugar）：词根变化 u→ue，第一人称单数 | juego ← jugar：不规则变位，第一人称单数 现在时 | 直接宾语代词 la + calle：代替直接宾语，置于变位动词前"}, "3": {"grammar": "现在时：es, vecino, puedo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "el mejor：阳性 单数，冠词与名词性数一致 | puedo（原形 poder）：词根变化 o→ue，第一人称单数 | es ← ser：不规则变位，第三人称单数 现在时 | puedo ← poder：不规则变位，第一人称单数 现在时"}}, "21": {"0": {"grammar": "定冠词 el：阳性单数，用于特指或类指", "morphology": "película：f性单数（以-a结尾阴性） | cine：m性单数（以-e结尾阳性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "1": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | 简单过去时 (pretérito indefinido)：dio — 描述已完成的过去动作，常见于叙事 | 现在时：miedo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "形容词与名词性数一致：阳性单数形容词修饰阳性名词 | era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时 | dio ← dar：不规则变位，第三人称单数 简单过去时"}, "2": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时"}, "3": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis amigos）", "morphology": ""}}, "22": {"0": {"grammar": "现在时：desayuno, es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "un buen：阳性 单数，冠词与名词性数一致 | día：m性单数（以-a结尾但为阳性例外） | es ← ser：不规则变位，第三人称单数 现在时"}, "1": {"grammar": "现在时：tostado, bebo — 表示习惯性动作或当前状态", "morphology": "过去分词作形容词：tostado — 修饰名词时需性数一致"}, "2": {"grammar": "现在时：da — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阴性单数形容词修饰阴性名词 | da ← dar：不规则变位，第三人称单数 现在时"}}, "23": {"0": {"grammar": "现在时：trabajo — 表示习惯性动作或当前状态", "morphology": "tienda：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "1": {"grammar": "现在时：puedo — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 los：阳性复数", "morphology": "los libros：阳性 复数，冠词与名词性数一致 | los clientes：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | puedo（原形 poder）：词根变化 o→ue，第一人称单数"}, "2": {"grammar": "现在时：es, trabajo — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "trabajo：m性单数（以-o结尾阳性） | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时"}}, "24": {"0": {"grammar": "现在时：invierno, hace, frío — 表示习惯性动作或当前状态", "morphology": "hace ← hacer：不规则变位，第三人称单数 现在时"}, "1": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 la：阴性单数", "morphology": "la nieve：阴性 单数，冠词与名词性数一致 | la ventana：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | 直接宾语代词 la + nieve：代替直接宾语，置于变位动词前"}, "2": {"grammar": "现在时：hace, frío, es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | aunque = 虽然（让步连词，后接陈述式表示事实，接虚拟式表示假设）", "morphology": "estación：f性单数（以-ón结尾阴性） | hace ← hacer：不规则变位，第三人称单数 现在时 | es ← ser：不规则变位，第三人称单数 现在时 | estación：指大词 (aumentativo)，表示\"大\"或强调"}}, "25": {"0": {"grammar": "简单过去时 (pretérito indefinido)：fuimos, fuimos — 描述已完成的过去动作，常见于叙事 | 现在时：amigo — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数 | a la(s) + 时间：在几点（时间点用a）", "morphology": "fiesta：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | fuimos ← ser：不规则变位，第一人称复数 简单过去时 | fuimos ← ir：不规则变位，第一人称复数 简单过去时"}, "1": {"grammar": "简单过去时 (pretérito indefinido)：dimos — 描述已完成的过去动作，常见于叙事 | 现在时：regalo, cantamos — 表示习惯性动作或当前状态", "morphology": "regalo：m性单数（以-o结尾阳性） | dimos ← dar：不规则变位，第一人称复数 简单过去时 | 间接宾语代词 le + dimos：代替间接宾语（给谁/对谁）"}, "2": {"grammar": "现在时：jugamos — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词 | jugamos（原形 jugar）：词根变化 u→ue，第一人称复数 | jugamos ← jugar：不规则变位，第一人称复数 现在时"}, "3": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事", "morphology": "noche：f性单数（以-e结尾阴性） | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}}, "26": {"0": {"grammar": "现在时：salgo — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数", "morphology": "los domingos：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | 直接宾语代词 los + domingos：代替直接宾语，置于变位动词前"}, "1": {"grammar": "现在时：campo — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 la：阴性单数 | 定冠词 los：阳性复数", "morphology": "los caminos：阳性 复数，冠词与名词性数一致 | naturaleza：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | del = de + el（前置词+冠词缩合）"}, "2": {"grammar": "现在时：es, ejercicio — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "una forma：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | del = de + el（前置词+冠词缩合） | es ← ser：不规则变位，第三人称单数 现在时"}}, "27": {"0": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi clase）", "morphology": "la de：阴性 单数，冠词与名词性数一致 | es ← ser：不规则变位，第三人称单数 现在时 | favorita：指小词 (diminutivo)，表示\"小\"或亲昵 | 直接宾语代词 la + de：代替直接宾语，置于变位动词前"}, "1": {"grammar": "现在时：aprendemos — 表示习惯性动作或当前状态", "morphology": ""}, "2": {"grammar": "现在时：es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "profesor：m性单数（以-r结尾阳性） | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | es ← ser：不规则变位，第三人称单数 现在时 | 复数形式：muchos, trucos — 元音结尾加-s，辅音结尾加-es"}, "3": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反", "morphology": "del = de + el（前置词+冠词缩合）"}}, "28": {"0": {"grammar": "现在时：cielo — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 las：阴性复数", "morphology": "las noches：阴性 复数，冠词与名词性数一致 | cielo：m性单数（以-o结尾阳性） | 直接宾语代词 las + noches：代替直接宾语，置于变位动词前"}, "1": {"grammar": "现在时：puedo — 表示习惯性动作或当前状态 | hay = there is/are（haber无人称形式，不论单复数都用hay） | 定冠词 la：阴性单数", "morphology": "luna：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | puedo（原形 poder）：词根变化 o→ue，第一人称单数 | puedo ← poder：不规则变位，第一人称单数 现在时"}, "2": {"grammar": "现在时：es, hace, mundo — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "es ← ser：不规则变位，第三人称单数 现在时 | hace ← hacer：不规则变位，第三人称单数 现在时 | bonito：指小词 (diminutivo)，表示\"小\"或亲昵"}}, "29": {"0": {"grammar": "现在时：celebramos, hermano, pequeño — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi hermano）", "morphology": "cumpleaños：m性单数（以-s结尾阳性单数） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词"}, "1": {"grammar": "现在时：compramos — 表示习惯性动作或当前状态", "morphology": "pastel：m性单数（以-l结尾阳性）"}, "2": {"grammar": "现在时：emocionado — 表示习惯性动作或当前状态 | estar 的用法：表示状态、位置、情感等暂时属性 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（sus regalos）", "morphology": "过去分词作形容词：emocionado — 修饰名词时需性数一致"}, "3": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 定冠词 la：阴性单数", "morphology": "día：m性单数（以-a结尾但为阳性例外） | la familia：阴性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | fue ← ser：不规则变位，第三人称单数 简单过去时"}}, "30": {"0": {"grammar": "现在时：verano, pasado — 表示习惯性动作或当前状态 | 简单过去时 (pretérito indefinido)：fui, fui — 描述已完成的过去动作，常见于叙事 | 定冠词 el：阳性单数，用于特指或类指 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis primos）", "morphology": "verano：m性单数（以-o结尾阳性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | al = a + el（前置词+冠词缩合） | fui ← ser：不规则变位，第一人称单数 简单过去时"}, "1": {"grammar": "定冠词 la：阴性单数", "morphology": "muerte：f性单数（以-e结尾阴性） | 直接宾语代词 la + muerte：代替直接宾语，置于变位动词前"}, "2": {"grammar": "现在时：teníamos, miedo, reíamos — 表示习惯性动作或当前状态", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词"}, "3": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事", "morphology": "día：m性单数（以-a结尾但为阳性例外） | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}}, "31": {"0": {"grammar": "物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi familia）", "morphology": ""}, "1": {"grammar": "现在时：decoramos — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "árbol：m性单数（以-l结尾阳性）"}, "2": {"grammar": "现在时：delicioso, pollo, asado — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi abuela）", "morphology": "un delicioso：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | 过去分词作形容词：asado — 修饰名词时需性数一致"}, "3": {"grammar": "现在时：cantamos — 表示习惯性动作或当前状态 | 定冠词 los：阳性复数", "morphology": "los niños：阳性 复数，冠词与名词性数一致 | los regalos：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | 复数形式：niños, regalos — 元音结尾加-s，辅音结尾加-es"}, "4": {"grammar": "现在时：es, momento, año — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指", "morphology": "el momento：阳性 单数，冠词与名词性数一致 | del = de + el（前置词+冠词缩合） | es ← ser：不规则变位，第三人称单数 现在时"}}, "32": {"0": {"grammar": "定冠词 la：阴性单数 | 定冠词 los：阳性复数 | cuando + 陈述式现在时 = 当…时（表示习惯性动作）", "morphology": "primavera：f性单数（以-a结尾阴性） | los árboles：阳性 复数，冠词与名词性数一致 | los pájaros：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "1": {"grammar": "gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 las：阴性复数", "morphology": "jardín：m性单数（以-n结尾阳性） | las tulipanes：阴性 复数，冠词与名词性数一致 | 复数形式：tulipanes, rojos — 元音结尾加-s，辅音结尾加-es | 直接宾语代词 las + tulipanes：代替直接宾语，置于变位动词前"}, "2": {"grammar": "现在时：hago, disfrutando, cálido — 表示习惯性动作或当前状态 | 定冠词 la：阴性单数", "morphology": "brisa：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | del = de + el（前置词+冠词缩合） | hago ← hacer：不规则变位，第一人称单数 现在时"}}, "33": {"0": {"grammar": "现在时：nuevo, trabajo, nervioso — 表示习惯性动作或当前状态 | 简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 定冠词 el：阳性单数，用于特指或类指 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi nuevo）", "morphology": "el primer：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}, "1": {"grammar": "现在时：cómo — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis compañeros）", "morphology": ""}, "2": {"grammar": "现在时：poco, ansioso, orgulloso — 表示习惯性动作或当前状态 | estar 的用法：表示状态、位置、情感等暂时属性 | 定冠词 el：阳性单数，用于特指或类指 | aunque = 虽然（让步连词，后接陈述式表示事实，接虚拟式表示假设）", "morphology": "un poco：阳性 单数，冠词与名词性数一致 | día：m性单数（以-a结尾但为阳性例外） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | 过去分词作形容词：aprendido — 修饰名词时需性数一致"}}, "34": {"0": {"grammar": "现在时：sábado, voy, mercado — 表示习惯性动作或当前状态", "morphology": "al = a + el（前置词+冠词缩合） | voy ← ir：不规则变位，第一人称单数 现在时 | 过去分词作形容词：sábado, mercado — 修饰名词时需性数一致"}, "1": {"grammar": "hay = there is/are（haber无人称形式，不论单复数都用hay）", "morphology": "形容词与名词性数一致：阴性复数形容词修饰阴性名词"}, "2": {"grammar": "现在时：son — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 los：阳性复数", "morphology": "los vendedores：阳性 复数，冠词与名词性数一致 | son ← ser：不规则变位，第三人称复数 现在时 | 复数形式：vendedores, amables — 元音结尾加-s，辅音结尾加-es | 直接宾语代词 los + vendedores：代替直接宾语，置于变位动词前"}, "3": {"grammar": "现在时：animado — 表示习惯性动作或当前状态 | gustar/encantar句型：主语是喜欢的事物，人是间接宾语 (me/te/le…) — 与中文/英语语序相反 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 las：阴性复数", "morphology": "las personas：阴性 复数，冠词与名词性数一致 | ambiente：m性单数（以-e结尾阳性） | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | 复数形式：personas — 元音结尾加-s，辅音结尾加-es"}}, "35": {"0": {"grammar": "简单过去时 (pretérito indefinido)：fuimos, fuimos — 描述已完成的过去动作，常见于叙事 | 现在时：excursionismo — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 la：阴性单数", "morphology": "el fin：阳性 单数，冠词与名词性数一致 | montaña：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | fuimos ← ser：不规则变位，第一人称复数 简单过去时"}, "1": {"grammar": "", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词"}, "2": {"grammar": "过去未完成时 (imperfecto)：era, era — 描述过去持续状态或习惯 | 现在时：cansado — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | estar 的用法：表示状态、位置、情感等暂时属性", "morphology": "vista：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | era ← ser：不规则变位，第一人称单数 过去未完成时 | era ← ser：不规则变位，第三人称单数 过去未完成时"}, "3": {"grammar": "现在时：tomamos, mágico — 表示习惯性动作或当前状态", "morphology": "复数形式：tomamos, muchas — 元音结尾加-s，辅音结尾加-es"}}, "36": {"0": {"grammar": "现在时：es, favorito — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 la：阴性单数 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi ciudad）", "morphology": "biblioteca：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | es ← ser：不规则变位，第三人称单数 现在时 | favorito：指小词 (diminutivo)，表示\"小\"或亲昵"}, "1": {"grammar": "hay = there is/are（haber无人称形式，不论单复数都用hay）", "morphology": "sección：f性单数（以-ón结尾阴性） | 形容词与名词性数一致：阴性复数形容词修饰阴性名词 | sección：指大词 (aumentativo)，表示\"大\"或强调"}, "2": {"grammar": "现在时：puedo, leyendo, estudiando — 表示习惯性动作或当前状态", "morphology": "puedo（原形 poder）：词根变化 o→ue，第一人称单数 | puedo ← poder：不规则变位，第一人称单数 现在时"}, "3": {"grammar": "定冠词 la：阴性单数", "morphology": "paz：f性单数（以-z结尾阴性） | iluminación：f性单数（以-ón结尾阴性） | iluminación：指大词 (aumentativo)，表示\"大\"或强调 | 直接宾语代词 la + paz：代替直接宾语，置于变位动词前"}}, "37": {"0": {"grammar": "简单过去时 (pretérito indefinido)：fue, fue — 描述已完成的过去动作，常见于叙事 | 定冠词 la：阴性单数", "morphology": "fiesta：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词 | fue ← ser：不规则变位，第三人称单数 简单过去时 | fue ← ir：不规则变位，第三人称单数 简单过去时"}, "1": {"grammar": "简单过去时 (pretérito indefinido)：puse — 描述已完成的过去动作，常见于叙事 | 定冠词 el：阳性单数，用于特指或类指 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi diploma）", "morphology": "toga：f性单数（以-a结尾阴性） | el mortarboard：阳性 单数，冠词与名词性数一致 | puse ← poner：不规则变位，第一人称单数 简单过去时"}, "2": {"grammar": "estar 的用法：表示状态、位置、情感等暂时属性 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mis padres）", "morphology": ""}, "3": {"grammar": "简单过去时 (pretérito indefinido)：tuvimos — 描述已完成的过去动作，常见于叙事 | 现在时：bailando, celebrando, nuestro — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（nuestro futuro）", "morphology": "fiesta：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | tuvimos（原形 tener）：词根变化 e→ie，第一人称复数 | tuvimos ← tener：不规则变位，第一人称复数 简单过去时"}}, "38": {"0": {"grammar": "现在时：méxico, es — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 los：阳性复数", "morphology": "día：m性单数（以-a结尾但为阳性例外） | los muertos：阳性 复数，冠词与名词性数一致 | celebración：f性单数（以-ón结尾阴性） | 形容词与名词性数一致：阳性复数形容词修饰阳性名词"}, "1": {"grammar": "现在时：decoramos, muerto — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（nuestros seres）", "morphology": "形容词与名词性数一致：阳性复数形容词修饰阳性名词"}, "2": {"grammar": "现在时：creamos — 表示习惯性动作或当前状态 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（sus vidas）", "morphology": ""}}, "39": {"0": {"grammar": "现在时：verano — 表示习惯性动作或当前状态 | 简单过去时 (pretérito indefinido)：hice — 描述已完成的过去动作，常见于叙事 | 物主形容词 mi/tu/su：置于名词前，与所修饰名词的数一致（mi primer）", "morphology": "hice ← hacer：不规则变位，第一人称单数 简单过去时 | barcelona：指大词 (aumentativo)，表示\"大\"或强调"}, "1": {"grammar": "定冠词 la：阴性单数", "morphology": "la sagrada：阴性 单数，冠词与名词性数一致 | la rambla：阴性 单数，冠词与名词性数一致 | paella：f性单数（以-a结尾阴性） | 形容词与名词性数一致：阴性单数形容词修饰阴性名词"}, "2": {"grammar": "现在时：poco, nervioso, principio — 表示习惯性动作或当前状态 | estar 的用法：表示状态、位置、情感等暂时属性 | aunque = 虽然（让步连词，后接陈述式表示事实，接虚拟式表示假设）", "morphology": "un poco：阳性 单数，冠词与名词性数一致 | 形容词与名词性数一致：阳性单数形容词修饰阳性名词 | al = a + el（前置词+冠词缩合）"}}, "40": {"0": {"grammar": "现在时：año — 表示习惯性动作或当前状态 | 定冠词 el：阳性单数，用于特指或类指 | 定冠词 la：阴性单数 | 定冠词 las：阴性复数", "morphology": "día：m性单数（以-a结尾但为阳性例外） | música：f性单数（以-a结尾阴性） | ciudad：f性单数（以-d结尾阴性） | las calles：阴性 复数，冠词与名词性数一致"}, "1": {"grammar": "定冠词 los：阳性复数", "morphology": "los músicos：阳性 复数，冠词与名词性数一致 | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | 复数形式：músicos, locales — 元音结尾加-s，辅音结尾加-es | 直接宾语代词 los + músicos：代替直接宾语，置于变位动词前"}, "2": {"grammar": "定冠词 la：阴性单数", "morphology": "la gente：阴性 单数，冠词与名词性数一致 | 直接宾语代词 la + gente：代替直接宾语，置于变位动词前"}, "3": {"grammar": "现在时：es, lleno — 表示习惯性动作或当前状态 | ser 的用法：表示本质特征、身份、时间等永久属性", "morphology": "día：m性单数（以-a结尾但为阳性例外） | 形容词与名词性数一致：阳性复数形容词修饰阳性名词 | es ← ser：不规则变位，第三人称单数 现在时"}}};
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function buildSidebar() {
+  var h = '';
+  for (var i = 0; i < ESSAYS.length; i++) {
+    var e = ESSAYS[i];
+    h += '<a href="#essay-' + e.num + '" data-num="' + e.num + '" data-title="' + esc(e.title_es + ' ' + e.title_cn) + '"><span class="num">' + e.num + '</span> ' + esc(e.title_es) + '</a>';
+  }
+  document.getElementById('sidebarNav').innerHTML = h;
+}
+
+function buildKnowledge(k) {
+  if (!k) return '';
+  var s = '';
+  if (k.vocabulary && k.vocabulary.length) {
+    s += '<div class="ks-section"><h4><span class="dot vocab"></span> 核心词汇 / Vocabulario</h4>';
+    for (var i = 0; i < k.vocabulary.length; i++) {
+      var wt = k.vocabulary[i].es.replace(/\\(.*?\\)/g, '').trim();
+      s += '<div class="ks-item"><button class="vocab-play-btn" data-word="' + esc(wt) + '" onclick="event.stopPropagation();speakVocab(this)" title="朗读">🔊</button><span class="ks-es">' + esc(k.vocabulary[i].es) + '</span><span class="ks-zh">' + esc(k.vocabulary[i].zh) + '</span></div>';
+    }
+    s += '</div>';
+  }
+  if (k.grammar && k.grammar.length) {
+    s += '<div class="ks-section"><h4><span class="dot grammar"></span> 语法要点 / Gramática</h4>';
+    for (var i = 0; i < k.grammar.length; i++) {
+      s += '<div class="ks-item"><span class="ks-es">' + esc(k.grammar[i].es) + '</span><span class="ks-zh">' + esc(k.grammar[i].zh) + '</span></div>';
+    }
+    s += '</div>';
+  }
+  if (k.phrases && k.phrases.length) {
+    s += '<div class="ks-section"><h4><span class="dot phrase"></span> 常用表达 / Expresiones</h4>';
+    for (var i = 0; i < k.phrases.length; i++) {
+      var pt = k.phrases[i].es.replace(/\\(.*?\\)/g, '').trim();
+      s += '<div class="ks-item"><button class="vocab-play-btn" data-word="' + esc(pt) + '" onclick="event.stopPropagation();speakVocab(this)" title="朗读">🔊</button><span class="ks-es">' + esc(k.phrases[i].es) + '</span><span class="ks-zh">' + esc(k.phrases[i].zh) + '</span></div>';
+    }
+    s += '</div>';
+  }
+  if (k.culture) {
+    s += '<div class="ks-section"><h4><span class="dot culture"></span> 文化知识 / Nota cultural</h4><div class="ks-item"><span class="ks-zh">' + esc(k.culture) + '</span></div></div>';
+  }
+  return '<div class="knowledge-summary"><div class="knowledge-summary-header">💡 知识点总结 / Resumen</div><div class="knowledge-summary-body">' + s + '</div></div>';
+}
+
+function buildCard(e) {
+  var k = KNOWLEDGE[e.num] || null;
+  var sentAnn = ANNOTATIONS[e.num] || {};
+  var sents = '';
+  for (var i = 0; i < e.sentences.length; i++) {
+    var a = sentAnn[i] || {};
+    var g = a.grammar || '';
+    var m = a.morphology || '';
+    var gClass = g ? ' pre-filled' : '';
+    var mClass = m ? ' pre-filled' : '';
+    var sid = 's-' + e.num + '-' + i;
+    sents += '<div class="sentence-block">' +
+      '<div class="sentence-es" onclick="event.stopPropagation();this.parentElement.classList.toggle(\'open\')">' +
+        '<span class="sentence-num">' + (i+1) + '.</span>' +
+        '<span class="sentence-toggle">▶</span>' +
+        '<span class="sentence-text">' + esc(e.sentences[i]) + '</span>' +
+        '<button class="play-btn" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button>' +
+      '</div>' +
+      '<div class="annotation-area">' +
+        '<div class="annotation-slot grammar' + gClass + '" contenteditable="true" data-sid="' + sid + '" data-type="grammar" data-original="' + esc(g) + '">' +
+          '<div class="slot-label">📝 语法 / Gramática</div><div class="slot-content">' + esc(g) + '</div>' +
+        '</div>' +
+        '<div class="annotation-slot pronunciation" contenteditable="true" data-sid="' + sid + '" data-type="pronunciation" data-original="">' +
+          '<div class="slot-label">🔊 发音 / Pronunciación</div><div class="slot-content"></div>' +
+        '</div>' +
+        '<div class="annotation-slot morphology' + mClass + '" contenteditable="true" data-sid="' + sid + '" data-type="morphology" data-original="' + esc(m) + '">' +
+          '<div class="slot-label">🔒 词性/变位 / Morfología</div><div class="slot-content">' + esc(m) + '</div>' +
+        '</div>' +
+      '</div></div>';
+  }
+  var fullTextId = 'fulltext-' + e.num;
+  var fullTextHTML = '<div class="full-text-overview">' +
+    '<div class="overview-label">' +
+      '<span>📄 全文概览 / Texto completo</span>' +
+      '<button class="play-all-btn" data-fulltext-id="' + fullTextId + '" onclick="event.stopPropagation();speakFullText(this)" title="朗读全文">🔊 朗读全文</button>' +
+    '</div>' +
+    '<div class="overview-text" id="' + fullTextId + '">' + esc(e.spanish) + '</div>' +
+    '<div class="overview-translation">' + esc(e.chinese) + '</div>' +
+    '</div>';
+  return '<article class="essay-card" id="essay-' + e.num + '">' +
+    '<div class="essay-card-header" onclick="toggleEssay(this.parentElement)">' +
+      '<div class="essay-num">' + e.num + '</div>' +
+      '<div class="essay-title-group"><div class="essay-title-es">' + esc(e.title_es) + '</div><div class="essay-title-cn">' + esc(e.title_cn) + '</div></div>' +
+      '<span class="toggle-icon">▼</span>' +
+    '</div>' +
+    '<div class="essay-card-body">' + fullTextHTML + sents +
+      '<div class="translation-row"><button data-essay-id="essay-' + e.num + '" onclick="event.stopPropagation();toggleTranslation(this)">🌍 显示中文翻译</button></div>' +
+      '<div class="chinese-translation" id="translation-essay-' + e.num + '">' + esc(e.chinese) + '</div>' +
+      buildKnowledge(k) +
+    '</div></article>';
+}
+
+function renderAll() {
+  buildSidebar();
+  var h = '';
+  for (var i = 0; i < ESSAYS.length; i++) { h += buildCard(ESSAYS[i]); }
+  document.getElementById('essaysContainer').innerHTML = h;
+  window._sentenceTexts = {};
+  for (var i = 0; i < ESSAYS.length; i++) {
+    for (var j = 0; j < ESSAYS[i].sentences.length; j++) {
+      window._sentenceTexts['s-' + ESSAYS[i].num + '-' + j] = ESSAYS[i].sentences[j];
+    }
+  }
+  window._fullTexts = {};
+  for (var i = 0; i < ESSAYS.length; i++) {
+    window._fullTexts['fulltext-' + ESSAYS[i].num] = ESSAYS[i].spanish;
+  }
+  restoreUserAnnotations();
+}
+
+// ===== SPEECH SYNTHESIS =====
+var TTS_ENGINE = 'google';
+var TTS_SPEED = 0.70;
+var currentAudio = null;
+var currentUtterance = null;
+var currentBtn = null;
+var _speaking = false;
+
+function toggleTTSEngine() {
+  var btn = document.getElementById('ttsEngineBtn');
+  if (TTS_ENGINE === 'google') {
+    TTS_ENGINE = 'web';
+    btn.textContent = '💻 系统语音';
+    btn.title = '切换语音引擎 (当前: 系统Web Speech API)';
+  } else {
+    TTS_ENGINE = 'google';
+    btn.textContent = '🎙️ Google TTS';
+    btn.title = '切换语音引擎 (当前: Google TTS - 更自然流畅)';
+  }
+  try { localStorage.setItem('spanish_tts_engine', TTS_ENGINE); } catch(e) {}
+}
+
+function changeSpeed(delta) {
+  TTS_SPEED = Math.round((TTS_SPEED + delta) * 100) / 100;
+  TTS_SPEED = Math.max(0.35, Math.min(1.2, TTS_SPEED));
+  document.getElementById('speedLabel').textContent = TTS_SPEED.toFixed(2) + 'x';
+  try { localStorage.setItem('spanish_tts_speed', TTS_SPEED); } catch(e) {}
+}
+
+function stopAllSpeech() {
+  _speaking = false;
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  if (currentUtterance) { window.speechSynthesis.cancel(); currentUtterance = null; }
+  if (currentBtn) { currentBtn.classList.remove('playing'); currentBtn = null; }
+}
+
+function speakWithGoogleTTS(text, btn, onStart, onEnd) {
+  var chunks = [];
+  var maxChunk = 180;
+  if (text.length <= maxChunk) { chunks = [text]; }
+  else {
+    var remaining = text;
+    while (remaining.length > 0) {
+      if (remaining.length <= maxChunk) { chunks.push(remaining); break; }
+      var chunk = remaining.substring(0, maxChunk);
+      var lastPeriod = Math.max(chunk.lastIndexOf('.'), chunk.lastIndexOf('!'), chunk.lastIndexOf('?'));
+      if (lastPeriod > maxChunk * 0.5) { chunk = remaining.substring(0, lastPeriod + 1); remaining = remaining.substring(lastPeriod + 1).trim(); }
+      else { var lastSpace = chunk.lastIndexOf(' '); chunk = remaining.substring(0, lastSpace > 0 ? lastSpace : maxChunk); remaining = remaining.substring(lastSpace > 0 ? lastSpace : maxChunk).trim(); }
+      chunks.push(chunk);
+    }
+  }
+  var chunkIndex = 0;
+  var fellBack = false;
+  if (onStart) onStart();
+  function playNextChunk() {
+    if (chunkIndex >= chunks.length) { if (onEnd) onEnd(); currentAudio = null; return; }
+    var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=' + encodeURIComponent(chunks[chunkIndex]);
+    var audio = new Audio(url);
+    audio.playbackRate = TTS_SPEED;
+    currentAudio = audio;
+    audio.onended = function() { chunkIndex++; playNextChunk(); };
+    audio.onerror = function() { if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd); };
+    audio.play().catch(function() { if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd); });
+  }
+  playNextChunk();
+}
+
+function speakWithWebAPI(text, btn, onStart, onEnd) {
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-ES';
+  u.rate = TTS_SPEED;
+  u.pitch = 1.0;
+  var voices = window.speechSynthesis.getVoices();
+  var bestVoice = null;
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang.indexOf('es') === 0) { if (!bestVoice) bestVoice = voices[i]; if (voices[i].name.indexOf('ónica') > 0 || voices[i].name.indexOf('Paulina') >= 0 || voices[i].name.indexOf('Google') >= 0) { bestVoice = voices[i]; break; } }
+  }
+  if (bestVoice) u.voice = bestVoice;
+  u.onstart = function() { if (onStart) onStart(); };
+  u.onend = function() { currentUtterance = null; if (onEnd) onEnd(); };
+  u.onerror = function() { currentUtterance = null; if (onEnd) onEnd(); };
+  currentUtterance = u;
+  window.speechSynthesis.speak(u);
+}
+
+function speakSentence(btn) {
+  var sid = btn.dataset.sid;
+  var text = window._sentenceTexts[sid] || '';
+  if (!text) return;
+  if (currentBtn === btn && _speaking) { stopAllSpeech(); return; }
+  stopAllSpeech();
+  _speaking = true;
+  currentBtn = btn;
+  var onStart = function() { btn.classList.add('playing'); };
+  var onEnd = function() { btn.classList.remove('playing'); _speaking = false; currentBtn = null; };
+  if (TTS_ENGINE === 'google') { speakWithGoogleTTS(text, btn, onStart, onEnd); }
+  else { speakWithWebAPI(text, btn, onStart, onEnd); }
+}
+
+function speakFullText(btn) {
+  var fullTextId = btn.dataset.fulltextId;
+  var text = window._fullTexts[fullTextId] || '';
+  if (!text) return;
+  if (currentBtn === btn && _speaking) { stopAllSpeech(); return; }
+  stopAllSpeech();
+  _speaking = true;
+  currentBtn = btn;
+  var onStart = function() { btn.classList.add('playing'); btn.textContent = '⏸ 暂停'; };
+  var onEnd = function() { btn.classList.remove('playing'); btn.textContent = '🔊 朗读全文'; _speaking = false; currentBtn = null; };
+  if (TTS_ENGINE === 'google') { speakWithGoogleTTS(text, btn, onStart, onEnd); }
+  else { speakWithWebAPI(text, btn, onStart, onEnd); }
+}
+
+function speakVocab(btn) {
+  var word = btn.dataset.word || '';
+  if (!word) return;
+  if (currentBtn === btn && _speaking) { stopAllSpeech(); return; }
+  stopAllSpeech();
+  _speaking = true;
+  currentBtn = btn;
+  var onStart = function() { btn.classList.add('playing'); };
+  var onEnd = function() { btn.classList.remove('playing'); _speaking = false; currentBtn = null; };
+  if (TTS_ENGINE === 'google') { speakWithGoogleTTS(word, btn, onStart, onEnd); }
+  else { speakWithWebAPI(word, btn, onStart, onEnd); }
+}
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) { window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); }; }
+}
+
+// ===== INTERACTIONS =====
+function toggleEssay(card) { card.classList.toggle('collapsed'); }
+function toggleTranslation(btn) {
+  var essayId = btn.dataset.essayId;
+  var t = document.getElementById('translation-' + essayId);
+  if (t.classList.toggle('visible')) { btn.textContent = '🙈 隐藏翻译'; btn.classList.add('active'); }
+  else { btn.textContent = '🌍 显示中文翻译'; btn.classList.remove('active'); }
+}
+function expandAll() { var cs = document.querySelectorAll('.essay-card'); for (var i = 0; i < cs.length; i++) cs[i].classList.remove('collapsed'); }
+function collapseAll() { var cs = document.querySelectorAll('.essay-card'); for (var i = 0; i < cs.length; i++) cs[i].classList.add('collapsed'); }
+function toggleAllTranslations() {
+  var ts = document.querySelectorAll('.chinese-translation');
+  var allVis = true;
+  for (var i = 0; i < ts.length; i++) { if (!ts[i].classList.contains('visible')) { allVis = false; break; } }
+  for (var i = 0; i < ts.length; i++) { if (allVis) ts[i].classList.remove('visible'); else ts[i].classList.add('visible'); }
+  var bs = document.querySelectorAll('.translation-row button');
+  for (var i = 0; i < bs.length; i++) { bs[i].textContent = allVis ? '🌍 显示中文翻译' : '🙈 隐藏翻译'; if (allVis) bs[i].classList.remove('active'); else bs[i].classList.add('active'); }
+}
+function clearUserAnnotations() {
+  if (!confirm('确定清空所有你自己添加的笔记吗？（预填内容不会被清除）')) return;
+  var slots = document.querySelectorAll('.annotation-slot[contenteditable]');
+  for (var i = 0; i < slots.length; i++) {
+    var orig = slots[i].dataset.original || '';
+    slots[i].querySelector('.slot-content').textContent = orig;
+    if (orig) slots[i].classList.add('pre-filled'); else slots[i].classList.remove('pre-filled');
+  }
+  localStorage.removeItem('spanish_user_notes');
+}
+function exportForPrint() { expandAll(); var ts = document.querySelectorAll('.chinese-translation'); for (var i = 0; i < ts.length; i++) ts[i].classList.add('visible'); setTimeout(function() { window.print(); }, 300); }
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('open'); }
+function filterEssays(q) {
+  var ls = document.querySelectorAll('#sidebarNav a'); q = q.toLowerCase();
+  for (var i = 0; i < ls.length; i++) { ls[i].style.display = (!q || (ls[i].dataset.title || '').toLowerCase().indexOf(q) !== -1) ? '' : 'none'; }
+}
+function updateActiveNav() {
+  var cs = document.querySelectorAll('.essay-card'); var ls = document.querySelectorAll('#sidebarNav a'); var cur = '';
+  for (var i = 0; i < cs.length; i++) { if (cs[i].getBoundingClientRect().top <= 120) cur = cs[i].id; }
+  for (var i = 0; i < ls.length; i++) { ls[i].classList.toggle('active', ls[i].getAttribute('href') === '#' + cur); }
+}
+function updateBackToTop() { document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 500); }
+window.addEventListener('scroll', function() { updateActiveNav(); updateBackToTop(); });
+
+function saveUserAnnotations() {
+  var data = {};
+  var slots = document.querySelectorAll('.annotation-slot[contenteditable]');
+  for (var i = 0; i < slots.length; i++) {
+    var content = slots[i].querySelector('.slot-content').textContent.trim();
+    var orig = slots[i].dataset.original || '';
+    if (content !== orig) { data[slots[i].dataset.sid + '-' + slots[i].dataset.type] = content; }
+  }
+  if (Object.keys(data).length) localStorage.setItem('spanish_user_notes', JSON.stringify(data));
+  else localStorage.removeItem('spanish_user_notes');
+}
+function restoreUserAnnotations() {
+  try {
+    var data = JSON.parse(localStorage.getItem('spanish_user_notes') || '{}');
+    var slots = document.querySelectorAll('.annotation-slot[contenteditable]');
+    for (var i = 0; i < slots.length; i++) {
+      var key = slots[i].dataset.sid + '-' + slots[i].dataset.type;
+      if (data[key]) { slots[i].querySelector('.slot-content').textContent = data[key]; slots[i].classList.add('pre-filled'); }
+    }
+  } catch(e) {}
+}
+document.addEventListener('blur', function(e) { if (e.target.closest('.annotation-slot')) saveUserAnnotations(); }, true);
+var saveTO;
+document.addEventListener('input', function(e) { if (e.target.closest('.annotation-slot')) { clearTimeout(saveTO); saveTO = setTimeout(saveUserAnnotations, 800); } }, true);
+document.getElementById('sidebarNav').addEventListener('click', function(e) { if (e.target.closest('a')) { document.getElementById('sidebar').classList.remove('open'); document.querySelector('.sidebar-overlay').classList.remove('open'); } });
+
+// ===== FILE:// DETECTION =====
+(function() {
+  if (window.location.protocol === 'file:') {
+    TTS_ENGINE = 'web';
+    var btn = document.getElementById('ttsEngineBtn');
+    if (btn) { btn.textContent = '💻 系统语音'; btn.title = 'Google TTS 在 file:// 下不可用，请通过 localhost 访问'; btn.style.opacity = '0.6'; btn.onclick = function() { alert('当前通过 file:// 协议打开，Google TTS 不可用。\n\n请在终端运行：\npython3 -m http.server 8080\n\n然后访问 http://localhost:8080/'); }; }
+    var notice = document.getElementById('fileProtocolNotice');
+    if (notice) notice.classList.add('show');
+    var cmdEl = document.getElementById('serverCmd');
+    if (cmdEl) { var path = window.location.href.replace('file://', '').split('/').slice(0, -1).join('/'); cmdEl.textContent = 'cd ' + path + ' && python3 -m http.server 8080'; }
+  }
+  try { var se = localStorage.getItem('spanish_tts_engine'); if (se === 'web' && window.location.protocol !== 'file:') { TTS_ENGINE = 'web'; document.getElementById('ttsEngineBtn').textContent = '💻 系统语音'; } } catch(e) {}
+  try { var ss = parseFloat(localStorage.getItem('spanish_tts_speed')); if (ss) { TTS_SPEED = ss; document.getElementById('speedLabel').textContent = TTS_SPEED.toFixed(2) + 'x'; } } catch(e) {}
+})();
+
+renderAll();
+updateBackToTop();
+</script>
+</body>
+</html>

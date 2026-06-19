@@ -231,7 +231,7 @@ function buildCard(e) {
         '<span class="sentence-num">' + (i+1) + '.</span>' +
         '<span class="sentence-toggle">▶</span>' +
         '<span class="sentence-text">' + esc(e.sentences[i]) + '</span>' +
-        '<button class="play-btn" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button>' +
+        '<button class="play-btn" data-sid="' + sid + '" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button>' +
       '</div>' +
       '<div class="annotation-area">' +
         '<div class="annotation-slot grammar' + gClass + '" contenteditable="true" data-sid="' + sid + '" data-type="grammar" data-original="' + esc(g) + '">' +

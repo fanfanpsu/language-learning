@@ -492,6 +492,7 @@ document.getElementById('sidebarNav').addEventListener('click', function(e) { if
 // ===== FILE:// DETECTION =====
 (function() {
   if (window.location.protocol === 'file:') {
+    // file:// → force Web Speech API (Google TTS blocked by CORS)
     TTS_ENGINE = 'web';
     var btn = document.getElementById('ttsEngineBtn');
     if (btn) { btn.textContent = '💻 系统语音'; btn.title = 'Google TTS 在 file:// 下不可用，请通过 localhost 访问'; btn.style.opacity = '0.6'; btn.onclick = function() { alert('当前通过 file:// 协议打开，Google TTS 不可用。\n\n请在终端运行：\npython3 -m http.server 8080\n\n然后访问 http://localhost:8080/'); }; }
@@ -499,8 +500,17 @@ document.getElementById('sidebarNav').addEventListener('click', function(e) { if
     if (notice) notice.classList.add('show');
     var cmdEl = document.getElementById('serverCmd');
     if (cmdEl) { var path = window.location.href.replace('file://', '').split('/').slice(0, -1).join('/'); cmdEl.textContent = 'cd ' + path + ' && python3 -m http.server 8080'; }
+  } else {
+    // HTTPS/localhost → restore user preference, default to Google TTS
+    try {
+      var se = localStorage.getItem('spanish_tts_engine');
+      if (se === 'web') {
+        TTS_ENGINE = 'web';
+        document.getElementById('ttsEngineBtn').textContent = '💻 系统语音';
+      }
+      // if se === 'google' or not set, keep default 'google'
+    } catch(e) {}
   }
-  try { var se = localStorage.getItem('spanish_tts_engine'); if (se === 'web' && window.location.protocol !== 'file:') { TTS_ENGINE = 'web'; document.getElementById('ttsEngineBtn').textContent = '💻 系统语音'; } } catch(e) {}
   try { var ss = parseFloat(localStorage.getItem('spanish_tts_speed')); if (ss) { TTS_SPEED = ss; document.getElementById('speedLabel').textContent = TTS_SPEED.toFixed(2) + 'x'; } } catch(e) {}
 })();
 

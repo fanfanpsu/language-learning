@@ -347,15 +347,22 @@ function speakWithGoogleTTS(text, btn, onStart, onEnd) {
   function playNextChunk() {
     if (chunkIndex >= chunks.length) { if (onEnd) onEnd(); currentAudio = null; return; }
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=' + encodeURIComponent(chunks[chunkIndex]);
-    var audio = new Audio();
-    audio.setAttribute('referrerpolicy', 'no-referrer');
-    audio.crossOrigin = 'anonymous';
-    audio.src = url;
-    audio.playbackRate = TTS_SPEED;
-    currentAudio = audio;
-    audio.onended = function() { chunkIndex++; playNextChunk(); };
-    audio.onerror = function() { if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd); };
-    audio.play().catch(function() { if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd); });
+    fetch(url, {referrerPolicy: 'no-referrer'})
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.blob();
+      })
+      .then(function(blob) {
+        var audio = new Audio(URL.createObjectURL(blob));
+        audio.playbackRate = TTS_SPEED;
+        currentAudio = audio;
+        audio.onended = function() { chunkIndex++; playNextChunk(); };
+        audio.onerror = function() { if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd); };
+        return audio.play();
+      })
+      .catch(function() {
+        if (fellBack) return; fellBack = true; speakWithWebAPI(text, btn, onStart, onEnd);
+      });
   }
   playNextChunk();
 }

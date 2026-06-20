@@ -309,7 +309,10 @@ function toggleTTSEngine() {
     btn.textContent = '🎙️ Google TTS';
     btn.title = '切换语音引擎 (当前: Google TTS - 更自然流畅)';
   }
-  try { localStorage.setItem('spanish_tts_engine', TTS_ENGINE); } catch(e) {}
+  try {
+    localStorage.setItem('spanish_tts_engine', TTS_ENGINE);
+    localStorage.setItem('spanish_tts_saved_from', window.location.protocol === 'file:' ? 'file' : (window.location.hostname === 'localhost' ? 'localhost' : 'https'));
+  } catch(e) {}
 }
 
 function changeSpeed(delta) {
@@ -503,14 +506,20 @@ document.getElementById('sidebarNav').addEventListener('click', function(e) { if
     var cmdEl = document.getElementById('serverCmd');
     if (cmdEl) { var path = window.location.href.replace('file://', '').split('/').slice(0, -1).join('/'); cmdEl.textContent = 'cd ' + path + ' && python3 -m http.server 8080'; }
   } else {
-    // HTTPS/localhost → restore user preference, default to Google TTS
+    // HTTPS/localhost → restore user preference, but ignore stale 'web' from file:// testing
     try {
       var se = localStorage.getItem('spanish_tts_engine');
       if (se === 'web') {
-        TTS_ENGINE = 'web';
-        document.getElementById('ttsEngineBtn').textContent = '💻 系统语音';
+        // Only restore 'web' if user explicitly saved it from a non-file:// session
+        var savedFrom = localStorage.getItem('spanish_tts_saved_from');
+        if (savedFrom === 'https' || savedFrom === 'localhost') {
+          TTS_ENGINE = 'web';
+          document.getElementById('ttsEngineBtn').textContent = '💻 系统语音';
+        } else {
+          // Stale 'web' from file:// — clear it and use Google TTS
+          localStorage.removeItem('spanish_tts_engine');
+        }
       }
-      // if se === 'google' or not set, keep default 'google'
     } catch(e) {}
   }
   try { var ss = parseFloat(localStorage.getItem('spanish_tts_speed')); if (ss) { TTS_SPEED = ss; document.getElementById('speedLabel').textContent = TTS_SPEED.toFixed(2) + 'x'; } } catch(e) {}

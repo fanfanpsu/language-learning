@@ -347,7 +347,10 @@ function speakWithGoogleTTS(text, btn, onStart, onEnd) {
   function playNextChunk() {
     if (chunkIndex >= chunks.length) { if (onEnd) onEnd(); currentAudio = null; return; }
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=' + encodeURIComponent(chunks[chunkIndex]);
-    var audio = new Audio(url);
+    var audio = new Audio();
+    audio.setAttribute('referrerpolicy', 'no-referrer');
+    audio.crossOrigin = 'anonymous';
+    audio.src = url;
     audio.playbackRate = TTS_SPEED;
     currentAudio = audio;
     audio.onended = function() { chunkIndex++; playNextChunk(); };

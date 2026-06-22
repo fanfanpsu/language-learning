@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google translate_tts returns 404 if a Referer header is sent. Strip it document-wide so <audio> requests succeed (referrerpolicy is ignored on <audio>). -->
+<meta name="referrer" content="no-referrer">
 <title>西班牙语小短文学习 - 40篇精读笔记</title>
 <style>
   :root {
@@ -351,7 +353,6 @@ function speakWithGoogleTTS(text, btn, onStart, onEnd) {
     if (chunkIndex >= chunks.length) { if (onEnd) onEnd(); currentAudio = null; return; }
     var url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=es&client=tw-ob&q=' + encodeURIComponent(chunks[chunkIndex]);
     var audio = document.createElement('audio');
-    audio.setAttribute('referrerpolicy', 'no-referrer');
     audio.src = url;
     audio.playbackRate = TTS_SPEED;
     currentAudio = audio;

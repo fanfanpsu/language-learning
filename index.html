@@ -255,7 +255,6 @@
     <div class="toolbar">
       <button onclick="expandAll()">&#128194; 展开全部</button>
       <button onclick="collapseAll()">&#128193; 折叠全部</button>
-      <button onclick="toggleAllTranslations()">&#127758; 切换翻译</button>
       <button onclick="clearUserAnnotations()">&#129529; 清空笔记</button>
       <button id="ttsEngineBtn" class="primary" onclick="toggleTTSEngine()" title="切换语音引擎">🎙️ Google TTS</button>
       <button onclick="changeSpeed(-0.05)" title="更慢">🐢</button>
@@ -378,8 +377,6 @@ function buildCard(e) {
       '<span class="toggle-icon">▼</span>' +
     '</div>' +
     '<div class="essay-card-body">' + fullTextHTML + sents +
-      '<div class="translation-row"><button data-essay-id="essay-' + e.num + '" onclick="event.stopPropagation();toggleTranslation(this)">🌍 显示中文翻译</button></div>' +
-      '<div class="chinese-translation" id="translation-essay-' + e.num + '">' + esc(e.chinese) + '</div>' +
       buildKnowledge(k) +
     '</div></article>';
 }
@@ -567,7 +564,7 @@ function clearUserAnnotations() {
   }
   localStorage.removeItem('spanish_user_notes');
 }
-function exportForPrint() { expandAll(); var ts = document.querySelectorAll('.chinese-translation'); for (var i = 0; i < ts.length; i++) ts[i].classList.add('visible'); setTimeout(function() { window.print(); }, 300); }
+function exportForPrint() { expandAll(); setTimeout(function() { window.print(); }, 300); }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.querySelector('.sidebar-overlay').classList.toggle('open'); }
 function filterEssays(q) {
   var ls = document.querySelectorAll('#essayQuickNav a'); q = q.toLowerCase();

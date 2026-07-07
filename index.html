@@ -130,6 +130,62 @@
     .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
     .sidebar-overlay.open { display: block; }
   }
+
+  /* Tab Navigation */
+  .sidebar-tabs { display: flex; padding: 12px 12px 0; gap: 6px; flex-direction: column; }
+  .sidebar-tabs .tab-btn { background: rgba(255,255,255,0.06); color: var(--sidebar-text); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; font-size: 0.84rem; cursor: pointer; font-family: inherit; text-align: left; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+  .sidebar-tabs .tab-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .sidebar-tabs .tab-btn.active { background: var(--sidebar-active); color: #fff; border-color: var(--sidebar-active); font-weight: 600; box-shadow: 0 2px 8px rgba(199,91,57,0.3); }
+  .sidebar-tabs .tab-btn .tab-icon { font-size: 1rem; }
+  /* Tab Panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  /* Knowledge Base Cards */
+  .kb-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 28px; overflow: hidden; }
+  .kb-card-header { padding: 18px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .kb-card-header .kb-icon { font-size: 1.4rem; }
+  .kb-card-header .kb-title { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .kb-card-header .kb-subtitle { font-size: 0.78rem; color: var(--text-secondary); }
+  .kb-card-header .toggle-icon { font-size: 1rem; color: var(--text-secondary); transition: transform 0.25s; margin-left: auto; }
+  .kb-card.collapsed .kb-card-header .toggle-icon { transform: rotate(-90deg); }
+  .kb-card.collapsed .kb-card-body { display: none; }
+  .kb-card-body { padding: 20px 28px; }
+  /* Number Grid */
+  .number-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; }
+  .number-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--annotation-bg); border-radius: var(--radius-sm); border: 1px solid transparent; transition: all 0.15s; cursor: default; }
+  .number-item:hover { border-color: var(--annotation-border); background: #fffbf6; }
+  .number-item .num-val { font-size: 0.7rem; color: #c9b99a; min-width: 24px; font-weight: 600; }
+  .number-item .num-es { font-size: 0.9rem; font-weight: 600; color: var(--text); flex: 1; }
+  .number-item .num-play { background: none; border: 1px solid transparent; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); font-size: 0.65rem; flex-shrink: 0; opacity: 0; transition: all 0.15s; }
+  .number-item:hover .num-play { opacity: 1; border-color: var(--annotation-border); }
+  .number-item .num-play:hover { background: var(--accent-light); border-color: var(--accent); }
+  .number-item .num-play.playing { background: var(--accent); color: #fff; }
+  /* Verb Tables */
+  .verb-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
+  .verb-table th { background: var(--accent-light); color: var(--accent); padding: 10px 14px; text-align: left; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .verb-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  .verb-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  .verb-table td { padding: 9px 14px; border-bottom: 1px solid #f5efe8; }
+  .verb-table tr:hover td { background: #fefcf9; }
+  .verb-table .person { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; white-space: nowrap; }
+  .verb-table .form { font-weight: 600; color: var(--text); }
+  .verb-table .form.irregular { color: var(--accent); }
+  .verb-table .form .pattern { font-size: 0.68rem; font-weight: 400; color: #c9b99a; }
+  .verb-table td .verb-play { background: none; border: 1px solid var(--annotation-border); border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); font-size: 0.6rem; margin-left: 6px; vertical-align: middle; transition: all 0.15s; }
+  .verb-table td .verb-play:hover { background: var(--accent-light); border-color: var(--accent); }
+  .verb-table td .verb-play.playing { background: var(--accent); color: #fff; }
+  /* Pattern badges */
+  .pattern-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; margin: 2px; }
+  .pattern-badge.stem-change { background: #fef0e8; color: #c75b39; }
+  .pattern-badge.irregular-badge { background: #fee8e8; color: #b93a3a; }
+  .pattern-badge.regular { background: #e8f5ec; color: #3a7d5a; }
+  /* Section intro */
+  .kb-section-intro { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.7; }
+  .kb-section-intro strong { color: var(--accent); }
+  @media (max-width: 768px) {
+    .number-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+    .verb-table { font-size: 0.78rem; }
+  }
   @media print {
     .sidebar,.back-to-top,.mobile-menu-btn,.sidebar-overlay,.toolbar { display:none!important; }
     .main { margin-left:0; padding:0; }
@@ -147,24 +203,36 @@
 <button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <aside class="sidebar" id="sidebar">
-  <div class="sidebar-header"><h2>&#127466;&#127480; 西班牙语学习</h2><div class="subtitle">40篇短文 &middot; 逐句精析</div></div>
-  <div class="sidebar-search"><input type="text" placeholder="&#128269; 搜索标题..." oninput="filterEssays(this.value)"></div>
+  <div class="sidebar-header"><h2>&#127466;&#127480; 西班牙语学习</h2><div class="subtitle" id="sidebarSubtitle">40篇短文 &middot; 逐句精析</div></div>
+  <div class="sidebar-tabs">
+    <button class="tab-btn active" onclick="switchTab('essays')" id="tabBtnEssays"><span class="tab-icon">📖</span> 短文精读</button>
+    <button class="tab-btn" onclick="switchTab('knowledge')" id="tabBtnKnowledge"><span class="tab-icon">📚</span> 基础知识</button>
+  </div>
+  <div class="sidebar-search" id="sidebarSearch"><input type="text" placeholder="&#128269; 搜索标题..." oninput="filterEssays(this.value)"></div>
   <nav class="sidebar-nav" id="sidebarNav"></nav>
 </aside>
 <main class="main" id="mainContent">
-  <div class="main-header"><h1>&#128214; 西班牙语小短文学习</h1><p>共40篇 &middot; 逐句精析 &middot; 语法标注 &middot; 发音朗读 &middot; 词性变位</p></div>
-  <div class="toolbar">
-    <button onclick="expandAll()">&#128194; 展开全部</button>
-    <button onclick="collapseAll()">&#128193; 折叠全部</button>
-    <button onclick="toggleAllTranslations()">&#127758; 切换翻译</button>
-    <button onclick="clearUserAnnotations()">&#129529; 清空笔记</button>
-    <button id="ttsEngineBtn" class="primary" onclick="toggleTTSEngine()" title="切换语音引擎">🎙️ Google TTS</button>
-    <button onclick="changeSpeed(-0.05)" title="更慢">🐢</button>
-    <button onclick="changeSpeed(+0.05)" title="更快">🐇</button>
-    <span id="speedLabel" style="font-size:0.78rem;color:var(--text-secondary);display:flex;align-items:center;margin:0 4px">0.70x</span>
-    <button class="primary" onclick="exportForPrint()">&#128424; 打印/导出</button>
+  <!-- Tab: Essays -->
+  <div class="tab-panel active" id="tab-essays">
+    <div class="main-header"><h1>&#128214; 西班牙语小短文学习</h1><p>共40篇 &middot; 逐句精析 &middot; 语法标注 &middot; 发音朗读 &middot; 词性变位</p></div>
+    <div class="toolbar">
+      <button onclick="expandAll()">&#128194; 展开全部</button>
+      <button onclick="collapseAll()">&#128193; 折叠全部</button>
+      <button onclick="toggleAllTranslations()">&#127758; 切换翻译</button>
+      <button onclick="clearUserAnnotations()">&#129529; 清空笔记</button>
+      <button id="ttsEngineBtn" class="primary" onclick="toggleTTSEngine()" title="切换语音引擎">🎙️ Google TTS</button>
+      <button onclick="changeSpeed(-0.05)" title="更慢">🐢</button>
+      <button onclick="changeSpeed(+0.05)" title="更快">🐇</button>
+      <span id="speedLabel" style="font-size:0.78rem;color:var(--text-secondary);display:flex;align-items:center;margin:0 4px">0.70x</span>
+      <button class="primary" onclick="exportForPrint()">&#128424; 打印/导出</button>
+    </div>
+    <div id="essaysContainer"></div>
   </div>
-  <div id="essaysContainer"></div>
+  <!-- Tab: Knowledge Base -->
+  <div class="tab-panel" id="tab-knowledge">
+    <div class="main-header"><h1>&#128218; 西班牙语基础知识</h1><p>数字 &middot; 动词变位 &middot; 不规则变形 &middot; 发音</p></div>
+    <div id="knowledgeContainer"></div>
+  </div>
 </main>
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 <script>
@@ -527,6 +595,214 @@ document.getElementById('sidebarNav').addEventListener('click', function(e) { if
 })();
 
 renderAll();
+
+// ===== TAB SWITCHING =====
+var currentTab = 'essays';
+
+function switchTab(tab) {
+  if (currentTab === tab) return;
+  currentTab = tab;
+
+  // Update tab buttons
+  document.getElementById('tabBtnEssays').classList.toggle('active', tab === 'essays');
+  document.getElementById('tabBtnKnowledge').classList.toggle('active', tab === 'knowledge');
+
+  // Update panels
+  document.getElementById('tab-essays').classList.toggle('active', tab === 'essays');
+  document.getElementById('tab-knowledge').classList.toggle('active', tab === 'knowledge');
+
+  // Update sidebar subtitle
+  var subtitle = document.getElementById('sidebarSubtitle');
+  subtitle.textContent = tab === 'essays' ? '40篇短文 · 逐句精析' : '数字 · 动词 · 变位';
+
+  // Show/hide search
+  document.getElementById('sidebarSearch').style.display = tab === 'essays' ? '' : 'none';
+
+  // Render knowledge base on first switch
+  if (tab === 'knowledge' && !window._knowledgeRendered) {
+    renderKnowledgeBase();
+    window._knowledgeRendered = true;
+  }
+
+  // Scroll to top
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ===== KNOWLEDGE BASE =====
+var NUMBERS_ES = [
+  'cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve',
+  'diez','once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve',
+  'veinte','veintiuno','veintidós','veintitrés','veinticuatro','veinticinco','veintiséis','veintisiete','veintiocho','veintinueve',
+  'treinta','treinta y uno','treinta y dos','treinta y tres','treinta y cuatro','treinta y cinco','treinta y seis','treinta y siete','treinta y ocho','treinta y nueve',
+  'cuarenta','cuarenta y uno','cuarenta y dos','cuarenta y tres','cuarenta y cuatro','cuarenta y cinco','cuarenta y seis','cuarenta y siete','cuarenta y ocho','cuarenta y nueve',
+  'cincuenta','cincuenta y uno','cincuenta y dos','cincuenta y tres','cincuenta y cuatro','cincuenta y cinco','cincuenta y seis','cincuenta y siete','cincuenta y ocho','cincuenta y nueve',
+  'sesenta','sesenta y uno','sesenta y dos','sesenta y tres','sesenta y cuatro','sesenta y cinco','sesenta y seis','sesenta y siete','sesenta y ocho','sesenta y nueve',
+  'setenta','setenta y uno','setenta y dos','setenta y tres','setenta y cuatro','setenta y cinco','setenta y seis','setenta y siete','setenta y ocho','setenta y nueve',
+  'ochenta','ochenta y uno','ochenta y dos','ochenta y tres','ochenta y cuatro','ochenta y cinco','ochenta y seis','ochenta y siete','ochenta y ocho','ochenta y nueve',
+  'noventa','noventa y uno','noventa y dos','noventa y tres','noventa y cuatro','noventa y cinco','noventa y seis','noventa y siete','noventa y ocho','noventa y nueve',
+  'cien'
+];
+
+function renderKnowledgeBase() {
+  var h = '';
+
+  // ---- SECTION 1: NUMBERS 0-100 ----
+  h += '<div class="kb-card">';
+  h += '<div class="kb-card-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+  h += '<span class="kb-icon">🔢</span><div><div class="kb-title">数字 0-100 / Números</div><div class="kb-subtitle">西班牙语数字 · 点击 🔊 听发音</div></div>';
+  h += '<span class="toggle-icon">▼</span></div>';
+  h += '<div class="kb-card-body">';
+  h += '<div class="kb-section-intro"><strong>规律：</strong>0-15 独立词；16-19 为 dieci+个位；20-29 为 veinti+个位；30-99 为 十位 + y + 个位；100 = cien</div>';
+  h += '<div class="number-grid">';
+  for (var i = 0; i <= 100; i++) {
+    h += '<div class="number-item"><span class="num-val">' + i + '</span><span class="num-es">' + esc(NUMBERS_ES[i]) + '</span><button class="num-play" onclick="event.stopPropagation();speakVocabNumber(this)" data-num="' + i + '" title="朗读">🔊</button></div>';
+  }
+  h += '</div></div></div>';
+
+  // ---- SECTION 2: REGULAR VERB PATTERNS ----
+  h += '<div class="kb-card">';
+  h += '<div class="kb-card-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+  h += '<span class="kb-icon">📐</span><div><div class="kb-title">规则动词变位 / Conjugación regular</div><div class="kb-subtitle">-ar, -er, -ir 三种词尾的现在时变位规律</div></div>';
+  h += '<span class="toggle-icon">▼</span></div>';
+  h += '<div class="kb-card-body">';
+  h += '<div class="kb-section-intro"><strong>西班牙语动词按词尾分三类：</strong>-ar, -er, -ir。规则动词去掉词尾后加上对应人称的后缀即可。以下以 <strong>hablar</strong>（说）、<strong>comer</strong>（吃）、<strong>vivir</strong>（住）为例。</div>';
+
+  // -ar table
+  h += '<h4 style="color:var(--accent);margin:16px 0 4px"><span class="pattern-badge regular">-ar</span> hablar（说）</h4>';
+  h += '<table class="verb-table"><tr><th>人称</th><th>词尾</th><th>变位</th><th>发音</th></tr>';
+  var arData = [
+    ['yo (我)', '-o', 'hablo', 'hablo'],
+    ['tú (你)', '-as', 'hablas', 'hablas'],
+    ['él/ella/usted (他/她/您)', '-a', 'habla', 'habla'],
+    ['nosotros/as (我们)', '-amos', 'hablamos', 'hablamos'],
+    ['vosotros/as (你们)', '-áis', 'habláis', 'habláis'],
+    ['ellos/ellas/ustedes (他们/她们/您们)', '-an', 'hablan', 'hablan']
+  ];
+  for (var j = 0; j < arData.length; j++) {
+    var row = arData[j];
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+  }
+  h += '</table>';
+
+  // -er table
+  h += '<h4 style="color:var(--accent);margin:20px 0 4px"><span class="pattern-badge regular">-er</span> comer（吃）</h4>';
+  h += '<table class="verb-table"><tr><th>人称</th><th>词尾</th><th>变位</th><th>发音</th></tr>';
+  var erData = [
+    ['yo (我)', '-o', 'como', 'como'],
+    ['tú (你)', '-es', 'comes', 'comes'],
+    ['él/ella/usted (他/她/您)', '-e', 'come', 'come'],
+    ['nosotros/as (我们)', '-emos', 'comemos', 'comemos'],
+    ['vosotros/as (你们)', '-éis', 'coméis', 'coméis'],
+    ['ellos/ellas/ustedes (他们/她们/您们)', '-en', 'comen', 'comen']
+  ];
+  for (var j = 0; j < erData.length; j++) {
+    var row = erData[j];
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+  }
+  h += '</table>';
+
+  // -ir table
+  h += '<h4 style="color:var(--accent);margin:20px 0 4px"><span class="pattern-badge regular">-ir</span> vivir（住）</h4>';
+  h += '<table class="verb-table"><tr><th>人称</th><th>词尾</th><th>变位</th><th>发音</th></tr>';
+  var irData = [
+    ['yo (我)', '-o', 'vivo', 'vivo'],
+    ['tú (你)', '-es', 'vives', 'vives'],
+    ['él/ella/usted (他/她/您)', '-e', 'vive', 'vive'],
+    ['nosotros/as (我们)', '-imos', 'vivimos', 'vivimos'],
+    ['vosotros/as (你们)', '-ís', 'vivís', 'vivís'],
+    ['ellos/ellas/ustedes (他们/她们/您们)', '-en', 'viven', 'viven']
+  ];
+  for (var j = 0; j < irData.length; j++) {
+    var row = irData[j];
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+  }
+  h += '</table>';
+
+  h += '<div class="kb-section-intro" style="margin-top:16px"><strong>注意：</strong>-er 和 -ir 变位非常相似，只有 nosotros 和 vosotros 的词尾不同（-emos/-imos, -éis/-ís）。</div>';
+  h += '</div></div>';
+
+  // ---- SECTION 3: TOP 20 IRREGULAR VERBS ----
+  h += '<div class="kb-card">';
+  h += '<div class="kb-card-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+  h += '<span class="kb-icon">⚡</span><div><div class="kb-title">最常用20个不规则动词 / 20 verbos irregulares</div><div class="kb-subtitle">高频动词的现在时变位 · 不规则形式高亮</div></div>';
+  h += '<span class="toggle-icon">▼</span></div>';
+  h += '<div class="kb-card-body">';
+  h += '<div class="kb-section-intro"><strong>这些动词覆盖了日常对话中约80%的动词使用。</strong>红色标注为不规则形式，括号内为变化类型。</div>';
+
+  // Top 20 irregular verbs data
+  var verbs = [
+    {inf: 'ser (是)', type: '完全不规则', forms: ['soy','eres','es','somos','sois','son'], irregular: [true,true,true,true,true,true]},
+    {inf: 'estar (在/处于)', type: '完全不规则', forms: ['estoy','estás','está','estamos','estáis','están'], irregular: [true,true,true,false,false,true]},
+    {inf: 'tener (有)', type: 'e→ie, yo不规则', forms: ['tengo','tienes','tiene','tenemos','tenéis','tienen'], irregular: [true,true,true,false,false,true]},
+    {inf: 'hacer (做)', type: 'yo不规则', forms: ['hago','haces','hace','hacemos','hacéis','hacen'], irregular: [true,false,false,false,false,false]},
+    {inf: 'ir (去)', type: '完全不规则', forms: ['voy','vas','va','vamos','vais','van'], irregular: [true,true,true,true,true,true]},
+    {inf: 'poder (能)', type: 'o→ue', forms: ['puedo','puedes','puede','podemos','podéis','pueden'], irregular: [true,true,true,false,false,true]},
+    {inf: 'decir (说)', type: 'e→i, yo不规则', forms: ['digo','dices','dice','decimos','decís','dicen'], irregular: [true,true,true,false,false,true]},
+    {inf: 'querer (想要)', type: 'e→ie', forms: ['quiero','quieres','quiere','queremos','queréis','quieren'], irregular: [true,true,true,false,false,true]},
+    {inf: 'saber (知道)', type: 'yo不规则', forms: ['sé','sabes','sabe','sabemos','sabéis','saben'], irregular: [true,false,false,false,false,false]},
+    {inf: 'poner (放)', type: 'yo不规则', forms: ['pongo','pones','pone','ponemos','ponéis','ponen'], irregular: [true,false,false,false,false,false]},
+    {inf: 'venir (来)', type: 'e→ie, yo不规则', forms: ['vengo','vienes','viene','venimos','venís','vienen'], irregular: [true,true,true,false,false,true]},
+    {inf: 'dar (给)', type: 'yo不规则', forms: ['doy','das','da','damos','dais','dan'], irregular: [true,false,false,false,false,false]},
+    {inf: 'ver (看)', type: 'yo不规则', forms: ['veo','ves','ve','vemos','veis','ven'], irregular: [true,false,false,false,false,false]},
+    {inf: 'salir (出去)', type: 'yo不规则', forms: ['salgo','sales','sale','salimos','salís','salen'], irregular: [true,false,false,false,false,false]},
+    {inf: 'pensar (想/思考)', type: 'e→ie', forms: ['pienso','piensas','piensa','pensamos','pensáis','piensan'], irregular: [true,true,true,false,false,true]},
+    {inf: 'dormir (睡觉)', type: 'o→ue', forms: ['duermo','duermes','duerme','dormimos','dormís','duermen'], irregular: [true,true,true,false,false,true]},
+    {inf: 'pedir (请求)', type: 'e→i', forms: ['pido','pides','pide','pedimos','pedís','piden'], irregular: [true,true,true,false,false,true]},
+    {inf: 'jugar (玩)', type: 'u→ue', forms: ['juego','juegas','juega','jugamos','jugáis','juegan'], irregular: [true,true,true,false,false,true]},
+    {inf: 'empezar (开始)', type: 'e→ie', forms: ['empiezo','empiezas','empieza','empezamos','empezáis','empiezan'], irregular: [true,true,true,false,false,true]},
+    {inf: 'sentir (感觉)', type: 'e→ie', forms: ['siento','sientes','siente','sentimos','sentís','sienten'], irregular: [true,true,true,false,false,true]}
+  ];
+
+  var persons = ['yo (我)', 'tú (你)', 'él/ella/usted (他/她/您)', 'nosotros/as (我们)', 'vosotros/as (你们)', 'ellos/ellas/ustedes (他们/她们/您们)'];
+
+  for (var v = 0; v < verbs.length; v++) {
+    var verb = verbs[v];
+    h += '<h4 style="color:var(--accent);margin:18px 0 6px">' + (v+1) + '. ' + verb.inf + ' <span class="pattern-badge irregular-badge">' + verb.type + '</span></h4>';
+    h += '<table class="verb-table"><tr><th style="width:30%">人称</th><th style="width:50%">变位</th><th style="width:20%">发音</th></tr>';
+    for (var p = 0; p < 6; p++) {
+      var form = verb.forms[p];
+      var isIrr = verb.irregular[p];
+      h += '<tr><td class="person">' + persons[p] + '</td>';
+      h += '<td class="form' + (isIrr ? ' irregular' : '') + '">' + form + (isIrr ? ' <span class="pattern" style="color:var(--accent)">← 不规则</span>' : '') + '</td>';
+      h += '<td>' + form + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+    }
+    h += '</table>';
+  }
+
+  h += '</div></div>';
+
+  h += '<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:0.8rem">📐 更多内容持续更新中...</div>';
+  document.getElementById('knowledgeContainer').innerHTML = h;
+}
+
+// Helper TTS functions for knowledge base
+function speakVocabNumber(btn) {
+  var num = parseInt(btn.dataset.num);
+  var word = NUMBERS_ES[num];
+  if (!word) return;
+  if (currentBtn === btn && _speaking) { stopAllSpeech(); return; }
+  stopAllSpeech();
+  _speaking = true;
+  currentBtn = btn;
+  var onStart = function() { btn.classList.add('playing'); };
+  var onEnd = function() { btn.classList.remove('playing'); _speaking = false; currentBtn = null; };
+  if (TTS_ENGINE === 'google') { speakWithGoogleTTS(word, btn, onStart, onEnd); }
+  else { speakWithWebAPI(word, btn, onStart, onEnd); }
+}
+
+function speakVocabText(btn) {
+  var word = btn.dataset.word || '';
+  if (!word) return;
+  if (currentBtn === btn && _speaking) { stopAllSpeech(); return; }
+  stopAllSpeech();
+  _speaking = true;
+  currentBtn = btn;
+  var onStart = function() { btn.classList.add('playing'); };
+  var onEnd = function() { btn.classList.remove('playing'); _speaking = false; currentBtn = null; };
+  if (TTS_ENGINE === 'google') { speakWithGoogleTTS(word, btn, onStart, onEnd); }
+  else { speakWithWebAPI(word, btn, onStart, onEnd); }
+}
+
 updateBackToTop();
 </script>
 </body>

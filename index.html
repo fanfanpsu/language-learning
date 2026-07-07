@@ -186,6 +186,33 @@
     .number-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     .verb-table { font-size: 0.78rem; }
   }
+
+  /* Grammar section */
+  .grammar-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 28px; overflow: hidden; }
+  .grammar-card-header { padding: 18px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .grammar-card-header .grammar-icon { font-size: 1.3rem; }
+  .grammar-card-header .grammar-title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .grammar-card-header .grammar-tag { font-size: 0.68rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .grammar-card-header .grammar-tag.essential { background: #fee8e8; color: #b93a3a; }
+  .grammar-card-header .grammar-tag.important { background: #fef0e8; color: #c75b39; }
+  .grammar-card-header .grammar-tag.useful { background: #e8f5ec; color: #3a7d5a; }
+  .grammar-card-header .toggle-icon { font-size: 1rem; color: var(--text-secondary); transition: transform 0.25s; margin-left: auto; }
+  .grammar-card.collapsed .grammar-card-header .toggle-icon { transform: rotate(-90deg); }
+  .grammar-card.collapsed .grammar-card-body { display: none; }
+  .grammar-card-body { padding: 20px 28px; }
+  .grammar-card-body .grammar-explain { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 14px; }
+  .grammar-card-body .grammar-explain strong { color: var(--accent); }
+  .grammar-example { background: var(--annotation-bg); border-left: 3px solid var(--accent); padding: 12px 18px; margin: 8px 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; display: flex; align-items: flex-start; gap: 10px; }
+  .grammar-example .ex-es { font-size: 0.95rem; font-weight: 600; color: var(--text); flex: 1; }
+  .grammar-example .ex-zh { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+  .grammar-example .ex-play { background: none; border: 1px solid var(--annotation-border); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--accent); font-size: 0.7rem; flex-shrink: 0; opacity: 0; transition: all 0.15s; margin-top: 2px; }
+  .grammar-example:hover .ex-play { opacity: 1; }
+  .grammar-example .ex-play:hover { background: var(--accent-light); border-color: var(--accent); }
+  .grammar-example .ex-play.playing { background: var(--accent); color: #fff; }
+  .grammar-rule { background: linear-gradient(135deg,#fef9f4 0%,#fdf4ea 100%); border: 1px solid var(--annotation-border); border-radius: var(--radius-sm); padding: 14px 18px; margin: 10px 0; font-size: 0.85rem; }
+  .grammar-rule .rule-title { font-weight: 700; color: var(--accent); margin-bottom: 4px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+  .grammar-rule .rule-content { color: var(--text-secondary); line-height: 1.7; }
+
   @media print {
     .sidebar,.back-to-top,.mobile-menu-btn,.sidebar-overlay,.toolbar { display:none!important; }
     .main { margin-left:0; padding:0; }
@@ -207,6 +234,7 @@
   <div class="sidebar-tabs">
     <button class="tab-btn active" onclick="switchTab('essays')" id="tabBtnEssays"><span class="tab-icon">📖</span> 短文精读</button>
     <button class="tab-btn" onclick="switchTab('knowledge')" id="tabBtnKnowledge"><span class="tab-icon">📚</span> 基础知识</button>
+    <button class="tab-btn" onclick="switchTab('grammar')" id="tabBtnGrammar"><span class="tab-icon">📝</span> 语法句式</button>
   </div>
   <div class="sidebar-search" id="sidebarSearch"><input type="text" placeholder="&#128269; 搜索标题..." oninput="filterEssays(this.value)"></div>
   <nav class="sidebar-nav" id="sidebarNav"></nav>
@@ -232,6 +260,11 @@
   <div class="tab-panel" id="tab-knowledge">
     <div class="main-header"><h1>&#128218; 西班牙语基础知识</h1><p>数字 &middot; 动词变位 &middot; 不规则变形 &middot; 发音</p></div>
     <div id="knowledgeContainer"></div>
+  </div>
+  <!-- Tab: Grammar -->
+  <div class="tab-panel" id="tab-grammar">
+    <div class="main-header"><h1>&#128221; 常用语法与句式</h1><p>核心语法规则 &middot; 常用句型 &middot; 例句发音</p></div>
+    <div id="grammarContainer"></div>
   </div>
 </main>
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
@@ -596,6 +629,189 @@ document.getElementById('sidebarNav').addEventListener('click', function(e) { if
 
 renderAll();
 
+// ===== GRAMMAR REFERENCE =====
+function renderGrammar() {
+  var h = '';
+  var points = [
+    {
+      title: 'Ser vs Estar — 两个"是"的区别',
+      tag: 'essential', tagText: '核心',
+      explain: '<strong>Ser</strong> 表示<strong>本质、永久属性</strong>（身份、来源、时间、特征）。<br><strong>Estar</strong> 表示<strong>状态、临时属性</strong>（位置、情绪、进行时）。<br>一个简单的判断方法：问自己这个属性是不是"会变的"——会变用 estar，不变用 ser。',
+      rule: {title: '速记口诀', content: 'Ser = 你是谁 (DOCTOR: Descripción, Origen, Característica, Tiempo, Ocupación, Relación)<br>Estar = 你怎么样 (PLACE: Posición, Locación, Acción, Condición, Emoción)'},
+      examples: [
+        {es: 'Soy estudiante.', zh: '我是学生。（身份 — ser）'},
+        {es: 'Estoy cansado.', zh: '我累了。（临时状态 — estar）'},
+        {es: 'Ella es de España.', zh: '她来自西班牙。（来源 — ser）'},
+        {es: 'El libro está en la mesa.', zh: '书在桌子上。（位置 — estar）'},
+        {es: 'Son las tres.', zh: '现在是三点。（时间 — ser）'},
+        {es: 'Está lloviendo.', zh: '正在下雨。（进行时 — estar）'}
+      ]
+    },
+    {
+      title: 'Por vs Para — 两个"为了"的区别',
+      tag: 'essential', tagText: '核心',
+      explain: '<strong>Por</strong> 侧重<strong>原因、动机、方式、交换</strong>（为什么这么做）。<br><strong>Para</strong> 侧重<strong>目的、目标、对象</strong>（为了什么而做）。',
+      rule: {title: '速记', content: 'Por = 因为/by/through（原因和手段）<br>Para = 为了/to（目的和对象）'},
+      examples: [
+        {es: 'Estudio español para viajar.', zh: '我学西班牙语为了旅行。（目的 — para）'},
+        {es: 'Gracias por la ayuda.', zh: '谢谢你的帮助。（原因 — por）'},
+        {es: 'Este regalo es para ti.', zh: '这个礼物是给你的。（对象 — para）'},
+        {es: 'Pago 10 euros por el libro.', zh: '我付了10欧买这本书。（交换 — por）'},
+        {es: 'Voy para el parque.', zh: '我往公园去。（方向 — para）'},
+        {es: 'Camino por el parque.', zh: '我穿过公园走。（经过 — por）'}
+      ]
+    },
+    {
+      title: 'Gustar 类动词 — 倒置结构',
+      tag: 'essential', tagText: '核心',
+      explain: '<strong>Gustar</strong>（喜欢）和它的"亲戚们"<strong>不是"我喜欢XX"</strong>，而是<strong>"XX让我喜欢"</strong>。主语是<strong>被喜欢的事物</strong>，人是<strong>间接宾语</strong>。所以动词的单复数跟事物走，不跟人走！',
+      rule: {title: 'Gustar 类动词家族', content: 'gustar (喜欢) · encantar (超爱) · interesar (感兴趣) · importar (重要) · doler (疼) · molestar (烦) · parecer (觉得) · fascinar (着迷) · faltar (缺少) · quedar (剩下)'},
+      examples: [
+        {es: 'Me gusta el café.', zh: '我喜欢咖啡。（咖啡让我喜欢 — 单数）'},
+        {es: 'Me gustan los libros.', zh: '我喜欢书。（书让我喜欢 — 复数）'},
+        {es: 'Te encanta la música.', zh: '你超爱音乐。'},
+        {es: 'Nos interesa la historia.', zh: '我们对历史感兴趣。'},
+        {es: 'Me duele la cabeza.', zh: '我头疼。（头让我疼）'},
+        {es: '¿Te gusta bailar?', zh: '你喜欢跳舞吗？（动词原形作主语 — 单数）'}
+      ]
+    },
+    {
+      title: '宾语代词 — 直接/间接',
+      tag: 'important', tagText: '重要',
+      explain: '西班牙语用<strong>代词</strong>代替宾语，放在<strong>变位动词前</strong>或贴在<strong>原形/副动词后</strong>。<br><strong>直接宾语</strong>（lo/la/los/las）= 被...的人/物。<br><strong>间接宾语</strong>（me/te/le/nos/os/les）= 给谁/对谁。',
+      rule: {title: '代词表', content: '直接：me · te · lo/la · nos · os · los/las<br>间接：me · te · le · nos · os · les<br>组合规则：le/les + lo/la → se lo/la （le lo 不能连用！）'},
+      examples: [
+        {es: 'Lo veo.', zh: '我看见他/它。（直接 lo）'},
+        {es: 'Le doy el libro.', zh: '我给他书。（间接 le）'},
+        {es: 'Se lo doy.', zh: '我把它给他。（le+lo → se lo）'},
+        {es: 'Quiero comprarlo. / Lo quiero comprar.', zh: '我想买它。（代词贴在原形后 或 放在变位动词前）'},
+        {es: 'Estoy leyéndolo.', zh: '我正在读它。（代词贴在副动词后 — 注意重音符号）'}
+      ]
+    },
+    {
+      title: '反身动词 — 自己对自己',
+      tag: 'important', tagText: '重要',
+      explain: '反身动词表示<strong>主语对自己执行动作</strong>。代词（me/te/se/nos/os/se）必须与主语人称一致。很多常用动词是反身形式：起床、洗澡、穿衣服...',
+      examples: [
+        {es: 'Me despierto a las siete.', zh: '我七点醒来。'},
+        {es: 'Te duchas por la mañana.', zh: '你早上洗澡。'},
+        {es: 'Se llama Juan.', zh: '他叫Juan。（字面：他称呼自己为Juan）'},
+        {es: 'Nos sentamos en el sofá.', zh: '我们坐在沙发上。'},
+        {es: '¿Cómo te llamas?', zh: '你叫什么名字？'}
+      ]
+    },
+    {
+      title: '进行时 — Estar + 副动词',
+      tag: 'important', tagText: '重要',
+      explain: '表示<strong>正在进行的动作</strong>。结构：<strong>estar（变位）+ 副动词</strong>。<br>-ar 动词 → -ando（hablar → hablando）<br>-er/-ir 动词 → -iendo（comer → comiendo, vivir → viviendo）',
+      examples: [
+        {es: 'Estoy estudiando español.', zh: '我正在学西班牙语。'},
+        {es: 'Ella está cocinando la cena.', zh: '她正在做晚饭。'},
+        {es: 'Estamos aprendiendo mucho.', zh: '我们正在学很多东西。'},
+        {es: '¿Qué estás haciendo?', zh: '你在做什么？'}
+      ]
+    },
+    {
+      title: '将来表达 — Ir a + 动词原形',
+      tag: 'important', tagText: '重要',
+      explain: '<strong>Ir a + infinitivo</strong> 是西班牙语最常用的表达"将要做某事"的方式，相当于英语的"going to"。比将来时态（-é/-ás/-á...）更口语化。',
+      examples: [
+        {es: 'Voy a viajar a España.', zh: '我要去西班牙旅行。'},
+        {es: '¿Vas a comer con nosotros?', zh: '你要和我们一起吃饭吗？'},
+        {es: 'Ella va a ser doctora.', zh: '她将成为医生。'},
+        {es: 'Vamos a ver una película.', zh: '我们要去看电影。'}
+      ]
+    },
+    {
+      title: '义务表达 — Tener que / Hay que',
+      tag: 'important', tagText: '重要',
+      explain: '<strong>Tener que + inf.</strong> = 某人必须做...（针对具体的人）<br><strong>Hay que + inf.</strong> = 应该/需要做...（泛指、无人称）',
+      examples: [
+        {es: 'Tengo que estudiar más.', zh: '我必须多学习。（我个人的义务）'},
+        {es: 'Hay que practicar todos los días.', zh: '应该每天练习。（泛指）'},
+        {es: 'Tienes que venir temprano.', zh: '你必须早点来。'},
+        {es: 'Hay que respetar las reglas.', zh: '应该遵守规则。'}
+      ]
+    },
+    {
+      title: '比较级与最高级',
+      tag: 'useful', tagText: '实用',
+      explain: '<strong>más + adj. + que</strong> = 比...更<br><strong>menos + adj. + que</strong> = 不如...<br><strong>tan + adj. + como</strong> = 和...一样<br><strong>el/la más + adj.</strong> = 最...',
+      examples: [
+        {es: 'Ella es más alta que yo.', zh: '她比我高。'},
+        {es: 'Este libro es menos interesante que el otro.', zh: '这本书不如那本有趣。'},
+        {es: 'Es tan bonito como Barcelona.', zh: '它和巴塞罗那一样美。'},
+        {es: 'Es el mejor restaurante de la ciudad.', zh: '这是城里最好的餐厅。（mejor = más bueno 的特殊形式）'}
+      ]
+    },
+    {
+      title: '简单过去时 vs 过去未完成时',
+      tag: 'essential', tagText: '核心',
+      explain: '这是西班牙语学习者最头疼的区别之一：<br><strong>简单过去时（Pretérito Indefinido）：</strong>已完成的、一次性动作（发生了什么）<br><strong>过去未完成时（Pretérito Imperfecto）：</strong>持续的背景、习惯、描述（当时是怎样）',
+      rule: {title: '判断口诀', content: '完成动作用 Indefinido（fui, comí, hablé）<br>背景/习惯用 Imperfecto（era, comía, hablaba）<br>正在进行的动作被打断 = 进行用 Imperfecto, 打断用 Indefinido'},
+      examples: [
+        {es: 'Ayer fui al cine.', zh: '昨天我去了电影院。（一次完成 — Indefinido）'},
+        {es: 'Cuando era niño, jugaba al fútbol.', zh: '我小时候常踢足球。（过去习惯 — Imperfecto）'},
+        {es: 'Estudiaba cuando sonó el teléfono.', zh: '我在学习，这时电话响了。（背景+打断）'},
+        {es: 'El día era bonito y hacía sol.', zh: '那天很美，阳光明媚。（场景描述 — Imperfecto）'}
+      ]
+    },
+    {
+      title: '常用连接词 — 让句子更流畅',
+      tag: 'useful', tagText: '实用',
+      explain: '连接词让你的西班牙语听起来更自然、更有逻辑。',
+      examples: [
+        {es: 'y / o / pero', zh: '和 / 或 / 但是'},
+        {es: 'porque / por eso', zh: '因为 / 因此'},
+        {es: 'aunque / sin embargo', zh: '虽然 / 然而'},
+        {es: 'además / también', zh: '此外 / 也'},
+        {es: 'entonces / luego', zh: '那么 / 然后'},
+        {es: 'primero... después... finalmente', zh: '首先...然后...最后'}
+      ]
+    },
+    {
+      title: '疑问词 — 问句的钥匙',
+      tag: 'useful', tagText: '实用',
+      explain: '西班牙语疑问词都带<strong>重音符号</strong>（tilde），和对应的关系词区分。',
+      examples: [
+        {es: '¿Qué? / ¿Cuál?', zh: '什么？/ 哪一个？'},
+        {es: '¿Quién? / ¿Quiénes?', zh: '谁？（单/复）'},
+        {es: '¿Dónde? / ¿Adónde?', zh: '哪里？/ 去哪里？'},
+        {es: '¿Cuándo? / ¿Cuánto?', zh: '什么时候？/ 多少？'},
+        {es: '¿Cómo? / ¿Por qué?', zh: '怎么样？/ 为什么？'},
+        {es: '¿Para qué? / ¿De quién?', zh: '为了什么？/ 谁的？'}
+      ]
+    }
+  ];
+
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    h += '<div class="grammar-card">';
+    h += '<div class="grammar-card-header" onclick="this.parentElement.classList.toggle(\'collapsed\')">';
+    h += '<span class="grammar-icon">' + (i+1) + '.</span>';
+    h += '<div style="flex:1"><span class="grammar-title">' + esc(p.title) + '</span></div>';
+    h += '<span class="grammar-tag ' + p.tag + '">' + p.tagText + '</span>';
+    h += '<span class="toggle-icon">▼</span></div>';
+    h += '<div class="grammar-card-body">';
+    h += '<div class="grammar-explain">' + p.explain + '</div>';
+    if (p.rule) {
+      h += '<div class="grammar-rule"><div class="rule-title">' + p.rule.title + '</div><div class="rule-content">' + p.rule.content + '</div></div>';
+    }
+    for (var j = 0; j < p.examples.length; j++) {
+      var ex = p.examples[j];
+      h += '<div class="grammar-example">';
+      h += '<div style="flex:1"><div class="ex-es">' + esc(ex.es) + '</div><div class="ex-zh">' + esc(ex.zh) + '</div></div>';
+      h += '<button class="ex-play" data-word="' + esc(ex.es) + '" onclick="event.stopPropagation();speakVocabText(this)" title="朗读">🔊</button>';
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  h += '<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:0.8rem">📐 更多语法内容持续更新中...</div>';
+  document.getElementById('grammarContainer').innerHTML = h;
+}
+
+
 // ===== TAB SWITCHING =====
 var currentTab = 'essays';
 
@@ -606,22 +822,30 @@ function switchTab(tab) {
   // Update tab buttons
   document.getElementById('tabBtnEssays').classList.toggle('active', tab === 'essays');
   document.getElementById('tabBtnKnowledge').classList.toggle('active', tab === 'knowledge');
+  document.getElementById('tabBtnGrammar').classList.toggle('active', tab === 'grammar');
 
   // Update panels
   document.getElementById('tab-essays').classList.toggle('active', tab === 'essays');
   document.getElementById('tab-knowledge').classList.toggle('active', tab === 'knowledge');
+  document.getElementById('tab-grammar').classList.toggle('active', tab === 'grammar');
 
   // Update sidebar subtitle
   var subtitle = document.getElementById('sidebarSubtitle');
-  subtitle.textContent = tab === 'essays' ? '40篇短文 · 逐句精析' : '数字 · 动词 · 变位';
+  if (tab === 'essays') subtitle.textContent = '40篇短文 · 逐句精析';
+  else if (tab === 'knowledge') subtitle.textContent = '数字 · 动词 · 变位';
+  else subtitle.textContent = '语法 · 句型 · 表达';
 
   // Show/hide search
   document.getElementById('sidebarSearch').style.display = tab === 'essays' ? '' : 'none';
 
-  // Render knowledge base on first switch
+  // Render on first switch
   if (tab === 'knowledge' && !window._knowledgeRendered) {
     renderKnowledgeBase();
     window._knowledgeRendered = true;
+  }
+  if (tab === 'grammar' && !window._grammarRendered) {
+    renderGrammar();
+    window._grammarRendered = true;
   }
 
   // Scroll to top

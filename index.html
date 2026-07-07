@@ -680,7 +680,7 @@ function renderKnowledgeBase() {
   ];
   for (var j = 0; j < arData.length; j++) {
     var row = arData[j];
-    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)" title="朗读">🔊</button></td></tr>';
   }
   h += '</table>';
 
@@ -697,7 +697,7 @@ function renderKnowledgeBase() {
   ];
   for (var j = 0; j < erData.length; j++) {
     var row = erData[j];
-    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)" title="朗读">🔊</button></td></tr>';
   }
   h += '</table>';
 
@@ -714,7 +714,7 @@ function renderKnowledgeBase() {
   ];
   for (var j = 0; j < irData.length; j++) {
     var row = irData[j];
-    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+    h += '<tr><td class="person">' + row[0] + '</td><td>' + row[1] + '</td><td class="form">' + row[2] + '</td><td>' + row[3] + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)" title="朗读">🔊</button></td></tr>';
   }
   h += '</table>';
 
@@ -764,7 +764,7 @@ function renderKnowledgeBase() {
       var isIrr = verb.irregular[p];
       h += '<tr><td class="person">' + persons[p] + '</td>';
       h += '<td class="form' + (isIrr ? ' irregular' : '') + '">' + form + (isIrr ? ' <span class="pattern" style="color:var(--accent)">← 不规则</span>' : '') + '</td>';
-      h += '<td>' + form + ' <button class="verb-play" data-word="' + row[3] + '" onclick="event.stopPropagation();speakVocabText(this)"" title="朗读">🔊</button></td></tr>';
+      h += '<td>' + form + ' <button class="verb-play" data-word="' + form + '" onclick="event.stopPropagation();speakVocabText(this)" title="朗读">🔊</button></td></tr>';
     }
     h += '</table>';
   }
